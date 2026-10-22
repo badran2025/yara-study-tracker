@@ -1,0 +1,1267 @@
+export const initialSubjects = [
+  {
+    id: "biology",
+    name: "الأحياء",
+    shortName: "الأحياء",
+    icon: "Dna",
+    color: "emerald",
+    accentBg: "bg-emerald-600",
+    lightBg: "bg-emerald-50",
+    borderColor: "border-emerald-600",
+    badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-300",
+    teacherName: "أ/ القزاز",
+    teacherPhone: "",
+    tutoringLocation: "سنتر تعليمي",
+    currentLessonId: "bio-1-1",
+    customNotice: "📌 تنويه: الفصل السابع (الأحياء وعلوم الأرض ص 143 - 167) موجود في نهاية كتاب الأحياء، لكنه يمثل منهج مادة الجيولوجيا لدمجهما معاً في كتاب واحد من قِبل الوزارة، وتم نقله لتبويب مادة الجيولوجيا المستقل.",
+    units: [
+      {
+        id: "unit-b1",
+        title: "الفصل الأول: الدعامة والحركة في الكائنات الحية (ص 5 - 22)",
+        lessons: [
+          {
+            id: "bio-1-1",
+            title: "الدعامة في النبات (الفسيولوجية والتركيبية)",
+            description: "خاصية الامتلاء والخاصية الأسموزية، وترسيب الكيوتين والسيليلوز واللجنين والسوبرين بجدر الخلايا",
+            status: "current",
+            quiz: null
+          },
+          {
+            id: "bio-1-2",
+            title: "الدعامة في الإنسان: الجهاز الهيكلي المحوري",
+            description: "تركيب العمود الفقري والفقرات العظمية، الجمجمة، والقفص الصدري وعظمة القص والضلوع العائمة",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-1-3",
+            title: "الهيكل الطرفي والغضاريف والمفاصل والأربطة والأوتار",
+            description: "الحزام الصدري والطرفان العلويان، الحزام الحوضي والطرفان السفليان، أنواع المفاصل (ليفية، غضروفية، زلالية)، وتر أخيل",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-1-4",
+            title: "الحركة في النبات (اللمس، النوم، الانتحاء، والشد)",
+            description: "حركة اللمس، حركة النوم واليقظة، الانتحاء، حركة الشد (في المحاليق والكورمات والأبصال)، والحركة الدورانية السيتوبلازمية",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-1-5",
+            title: "الحركة في الإنسان: الجهاز العضلي وآلية الانقباض",
+            description: "تركيب العضلة الهيكلية والقطع العضلية (الساركومير)، آلية الانقباض (نظرية الخيوط المنزلقة لهكسلي)، والشد العضلي والإجهاد",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-b2",
+        title: "الفصل الثاني: التنسيق الهرموني في الكائنات الحية (ص 23 - 38)",
+        lessons: [
+          {
+            id: "bio-2-1",
+            title: "مفهوم الهرمونات والأوكسينات النباتية وخصائص الهرمونات",
+            description: "دراسات كلود برنار وستارلنج، تجارب بويسن جنسن على الأوكسينات، وخصائص الهرمونات والغدد الصماء",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-2-2",
+            title: "الغدة النخامية (سيدة الغدد الصماء)",
+            description: "الجزء الغدي: هرمون النمو GH، والهرمونات المنبهة (TSH, ACTH, FSH, LH, والبرولاكتين). الجزء العصبي: ADH والأوكسيتوسين",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-2-3",
+            title: "الغدة الدرقية والغدد جارات الدرقية",
+            description: "هرمون الثيروكسين وأمراض التضخم البسيط والجحوظي (الميكسوديما والقماءة)، وهرمون الكالسيتونين والباراثورمون وتنظيم الكالسيوم",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-2-4",
+            title: "الغدتان الكظريتان والبنكرياس",
+            description: "هرمونات قشرة الكظرية (السكرية والمعدنية والجنسية)، هرمونات النخاع (الأدرينالين والنورأدرينالين)، وخلايا جزر لانجرهانز (الأنسولين والجلوكاجون)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-2-5",
+            title: "الغدد التناسلية (المناسل) وهرمونات القناة الهضمية",
+            description: "التستوستيرون والأندروستيرون، الإستروجين والبروجسترون والريلاكسين، وهرمونات المعدة والأمعاء (الجاسترين والسيكريتين)",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-b3",
+        title: "الفصل الثالث: التكاثر في الكائنات الحية (ص 39 - 76)",
+        lessons: [
+          {
+            id: "bio-3-1",
+            title: "طرق التكاثر اللاجنسي في الكائنات الحية",
+            description: "الانشطار الثنائي، التبرعم، التجدد، التكاثر بالجراثيم، التوالد البكري (في النحل وحشرة المن)، وزراعة الأنسجة النباتية",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-3-2",
+            title: "التكاثر الجنسي وظاهرة تعاقب الأجيال",
+            description: "الاقتران (السلمي والجانبي في طحلب الإسبيروجيرا)، التكاثر بالأمشاج الجنسية، ودورة حياة بلازموديوم الملاريا وسرخس الفوجير",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-3-3",
+            title: "التكاثر في النباتات الزهرية وتكوين البذور والثمار",
+            description: "تركيب الزهرة النموذجية، تكوين حبوب اللقاح والبويضات، التلقيح والإخصاب المزدوج، وتكوين الثمار والبذور والإثمار العذري",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-3-4",
+            title: "الجهاز التناسلي الذكري والأنثوي في الإنسان وتكوين الأمشاج",
+            description: "تركيب الخصية ومراحل تكوين الحيوانات المنوية، تركيب المبيض ومراحل تكوين البويضات والجسم الأصفر",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-3-5",
+            title: "دورة الطمث، الإخصاب، وتكوين الجنين والأغشية الجنينية",
+            description: "مراحل دورة الطمث، هرمونات المبيض، لحظة الإخصاب، تفلج البويضة، غشاء الرهل وغشاء السلى، ومراحل نمو الجنين الثلاثة",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-3-6",
+            title: "وسائل منع الحمل، التوائم، والتطبيقات الحديثة للتكاثر",
+            description: "حبوب منع الحمل واللولب والواقي والتعقيم الجراحي، التوائم المتماثلة والمتآخية، أطفال الأنابيب، بنوك الأمشاج، والاستنساخ",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-b4",
+        title: "الفصل الرابع: المناعة في الكائنات الحية (ص 77 - 102)",
+        lessons: [
+          {
+            id: "bio-4-1",
+            title: "المناعة في النبات (التركيبية والبيوكيميائية)",
+            description: "الأدمة الخارجية والجدار الخلوي، الفلين والتيلوزات والصموغ، المستقبلات المناعية والمواد الكيميائية المضادة وإنزيمات نزع السمية",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-4-2",
+            title: "الجهاز المناعي في الإنسان: الأعضاء الليمفاوية",
+            description: "نخاع العظام الأحمر، الغدة التيموسية وهرمون التيموسين، الطحال، اللوزتان، بقع باير، والعقد الليمفاوية وتكوين الليمف",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-4-3",
+            title: "خلايا الدم البيضاء، الخلايا الليمفاوية، والمواد الكيميائية المساعدة",
+            description: "الخلايا البائية B والتائية T (المساعدة والسامة والمثبطة) والقاتلة الطبيعية NK، البلعمية الكبيرة، الكيموكينات، والإنترلوكينات، والمتممات، والإنترفيرونات",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-4-4",
+            title: "الأجسام المضادة (التركيب وطرق العمل)",
+            description: "السلاسل الثقيلة والخفيفة والموقع المتغير، وآليات عمل الأجسام المضادة: التعادل، التلازن (الإلصاق)، الترسيب، التحلل، وإبطال مفعول السموم",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-4-5",
+            title: "المناعة الطبيعية الفطرية (خط الدفاع الأول والثاني)",
+            description: "الجلد والمخاط والدموع واللعاب وحمض المعدة، والاستجابة بالالتهاب ومادة الهيستامين والخلايا الصارية",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-4-6",
+            title: "المناعة المكتسبة (الخلطية والخلوية) وخلايا الذاكرة",
+            description: "خط الدفاع الثالث، دور بروتين التوافق النسيجي MHC، المناعة الخلطية بالبائيات، الخلوية بالتائيات، والمناعة الأولية والثانوية",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-b5",
+        title: "الفصل الخامس: الحمض النووي DNA والمعلومات الوراثية (ص 103 - 120)",
+        lessons: [
+          {
+            id: "bio-5-1",
+            title: "الأدلة على أن DNA هو المادة الوراثية",
+            description: "تجارب التحول البكتيري لجريفيث وأفري، لاقمات البكتيريا (البكتيريوفاج) لهرشي وتشيس، وكمية DNA الثابتة في الخلايا",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-5-2",
+            title: "تركيب لولب DNA المزدوج وتضاعف DNA",
+            description: "النيوكليوتيدات والقواعد النيتروجينية، دراسات فرانكلين، نموذج واطسون وكريك، وإنزيمات التضاعف (اللولب، البلمرة، والربط)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-5-3",
+            title: "إصلاح عيوب DNA وتركيب الصبغيات في أوليات وحقيقيات النواة",
+            description: "إنزيمات الربط لإصلاح التلف، البلازميدات في البكتيريا، وتكثيف DNA بالهستونات وغير الهستونية وتكوين النيوكليوسومات",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-5-4",
+            title: "المحتوى الجيني والطفرات وأنواعها",
+            description: "الجينات المتكررة و DNA غير المشفر، أنواع الطفرات (جينية، صبغية عددية وتركيبية)، والطفرات المشيجية والجسدية والمستحدثة",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-b6",
+        title: "الفصل السادس: الأحماض النووية وتخليق البروتين RNA (ص 121 - 142)",
+        lessons: [
+          {
+            id: "bio-6-1",
+            title: "بناء البروتين وأنواع الأحماض النووية الريبوزية (RNA)",
+            description: "البروتينات التركيبية والتنظيمية، مقارنة DNA و RNA، أنواع RNA الثلاثة: الرسول mRNA، الريبوسومي rRNA، والناقل tRNA",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-6-2",
+            title: "الشفرة الوراثية ومراحل تخليق البروتين في الخلية",
+            description: "كودونات البدء والوقف، ومراحل الترجمة (بدء السلسلة، استطالة السلسلة، وإنهاء السلسلة)، وعديد الريبوسوم",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-6-3",
+            title: "التكنولوجيا الجزيئية والهندسة الوراثية (DNA معاد الاتحاد)",
+            description: "تهجين الحمض النووي، إنزيمات القصر البكتيرية ومواقع التعرف، استنساخ تتابعات DNA، إنزيم النسخ العكسي وجهاز PCR",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "bio-6-4",
+            title: "التطبيقات الطبية والزراعية ومشروع الجينوم البشري",
+            description: "إنتاج الإنسولين البشري والإنترفيرون، تحسين المحاصيل، ومخاطر الهندسة الوراثية وأهمية مشروع الجينوم البشري",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "physics",
+    name: "الفيزياء",
+    shortName: "الفيزياء",
+    icon: "Zap",
+    color: "blue",
+    accentBg: "bg-blue-600",
+    lightBg: "bg-blue-50",
+    borderColor: "border-blue-600",
+    badgeColor: "bg-blue-100 text-blue-800 border-blue-300",
+    teacherName: "أ/ محمد طارق",
+    teacherPhone: "",
+    tutoringLocation: "سنتر تعليمي",
+    currentLessonId: "phy-1-2",
+    units: [
+      {
+        id: "phy-u1",
+        title: "الفصل الأول: التيار الكهربي وقانون أوم وقانونا كيرشوف (ص 2 - 24)",
+        lessons: [
+          {
+            id: "phy-1-1",
+            title: "شدة التيار، فرق الجهد، وقانون أوم والمقاومة النوعية والتوصيلية",
+            description: "كمية الشحنة والزمن، المقاومة والعوامل المؤثرة، المقاومة النوعية والتوصيلية الكهربية لفلزات الموصلات",
+            status: "mastered",
+            quiz: {
+              date: "2026-10-12",
+              score: 96,
+              totalScore: 100,
+              percentage: 96,
+              passed: true,
+              weaknesses: "إتقان ممتاز، مراجعة بسيطة لوحدات القياس المكافئة للأوم متر.",
+              geminiFeedback: "أداء متميز وفهم عميق للعلاقة بين المقاومة وأبعاد الموصل."
+            }
+          },
+          {
+            id: "phy-1-2",
+            title: "توصيل المقاومات على التوالي والتوازي والمقاومة المكافئة",
+            description: "قوانين التوالي والتوازي، حساب المقاومة المكافئة للدائرة، وقراءة الفولتميتر والأميتر وتجزئة التيار",
+            status: "current", // علامة التوقف الافتراضية
+            quiz: null
+          },
+          {
+            id: "phy-1-3",
+            title: "قانون أوم للدائرة المغلقة والقوة الدافعة الكهربية للبطارية",
+            description: "القوة الدافعة الكهربية VB، المقاومة الداخلية r، وفرق الجهد بين قطبي العمود وحالة الشحن والتفريغ",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-1-4",
+            title: "قانونا كيرشوف (الأول والثاني) وحل الدوائر الكهربية المعقدة",
+            description: "قانون حفظ الشحنة (العقدة)، قانون حفظ الطاقة (المسارات المغلقة)، وحل المعادلات الخطية للتيارات المجهولة",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "phy-u2",
+        title: "الفصل الثاني: التأثير المغناطيسي للتيار الكهربي وأجهزة القياس (ص 25 - 53)",
+        lessons: [
+          {
+            id: "phy-2-1",
+            title: "المجال المغناطيسي لسلك مستقيم وقانون أمبير الدائري",
+            description: "كثافة الفيض المغناطيسي B، قاعدة اليد اليمنى لأمبير، وتخطيط خطوط الفيض حول السلك ونقطة التعادل",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-2-2",
+            title: "المجال المغناطيسي لملف دائري وملف لولبي (حلزوني)",
+            description: "كثافة الفيض عند مركز الملف الدائري ومحور الملف اللولبي، قاعدة البريمة اليمنى وقاعدة حركة عقارب الساعة",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-2-3",
+            title: "القوة المغناطيسية وعزم الازدواج وعزم ثنائي القطب",
+            description: "قوة لورنتز وقاعدة فليمنج لليد اليسرى، القوة المتبادلة بين سلكين، عزم الازدواج وعزم ثنائي القطب المغناطيسي md",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-2-4",
+            title: "أجهزة القياس الكهربي: الجلفانومتر، الأميتر، الفولتميتر، والأوميتر",
+            description: "الجلفانومتر الحساس، مجزئ التيار لتحويله لأميتر، مضاعف الجهد لتحويله لفولتميتر، ومعايرة واستخدام الأوميتر",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "phy-u3",
+        title: "الفصل الثالث: الحث الكهرومغناطيسي (ص 54 - 89)",
+        lessons: [
+          {
+            id: "phy-3-1",
+            title: "تجربة فاراداي وقانون فاراداي للحث وقاعدة لينز",
+            description: "القوة الدافعة المستحثة، المعدل الزمني لقطع خطوط الفيض، وتحديد اتجاه التيار المستحث بقاعدة لينز",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-3-2",
+            title: "الحث المتبادل بين ملفين والحث الذاتي لملف والتيارات الدوامية",
+            description: "معامل الحث المتبادل M ومعامل الحث الذاتي L، ظاهرة الحث الذاتي عند غلق وفتح الدائرة، وأفران الحث",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-3-3",
+            title: "القوة الدافعة في سلك مستقيم والمولد الكهربي (الدينامو)",
+            description: "قاعدة فليمنج لليد اليمنى، تركيب الدينامو، القيمة اللحظية والعظمى والفعالة (eff)، وتقويم التيار المتردد",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-3-4",
+            title: "المحول الكهربي والمحرك الكهربي (الموتور)",
+            description: "المحول الرافع والخافض، كفاءة المحول وقدرة النقل، وتركيب الموتور واستمرار دورانه في نفس الاتجاه",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "phy-u4",
+        title: "الفصل الرابع: دوائر التيار المتردد (ص 90 - 105)",
+        lessons: [
+          {
+            id: "phy-4-1",
+            title: "التيار المتردد والأميتر الحراري ودائرة مقاومة أومية",
+            description: "خصائص التيار المتردد، تركيب ومعايرة وعيوب الأميتر الحراري، ودائرة تيار متردد تحوي مقاومة أومية عديمة الحث",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-4-2",
+            title: "دائرة ملف حث نقي والمفاعلة الحثية (XL) ودائرة مكثف والمفاعلة السعوية (XC)",
+            description: "علاقة الطور بين الجهد والتيار في ملف الحث، المفاعلة الحثية XL، شحن وتفريغ المكثف، والمفاعلة السعوية XC",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-4-3",
+            title: "دوائر التيار المتردد المركبة: دائرة R-L، ودائرة R-C، ودائرة R-L-C",
+            description: "المعاوقة الكلية Z، زاوية الطور، تمثيل متجهات الجهد والتيار، والقدرة المستهلكة في الدائرة",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-4-4",
+            title: "الدائرة المهتزة ودائرة الرنين وتطبيقات الاستقبال اللاسلكي",
+            description: "تبادل الطاقة بين المكثف وملف الحث في الدائرة المهتزة، شروط دائرة الرنين وتردد الرنين واختيار المحطات",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "phy-u5",
+        title: "الفصل الخامس: ازدواجية الموجة والجسيم (ص 107 - 120)",
+        lessons: [
+          {
+            id: "phy-5-1",
+            title: "إشعاع الجسم الأسود وتفسير ماكس بلانك وقانون فين",
+            description: "منحنى بلانك، قصور الفيزياء الكلاسيكية، فرض ماكس بلانك (تكميم الطاقة)، وقانون فين للإشعاع",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-5-2",
+            title: "التأثير الكهروحراري والتأثير الكهروضوئي وتفسير أينشتاين",
+            description: "أنبوبة شعاع الكاثود CRT، الخلية الكهروضوئية، دالة الشغل Ew، التردد الحرج، ومعادلة أينشتاين الكهروضوئية",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-5-3",
+            title: "ظاهرة كومتون وخواص الفوتون والقوة الإشعاعية",
+            description: "تصادم فوتون أشعة إكس بإلكترون حر، إثبات الصفة الجسيمية للضوء (حفظ كمية الحركة والطاقة)، وكتلة وكمية حركة الفوتون",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-5-4",
+            title: "الطبيعة الموجية للجسيم (دي برولي) والمجهر الإلكتروني",
+            description: "معادلة دي برولي لطول موجة المادة المصاحبة، فكرة عمل المجهر الإلكتروني وسبب تفوقه التكبيري على الضوئي",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "phy-u6",
+        title: "الفصل السادس: الأطياف الذرية (ص 121 - 133)",
+        lessons: [
+          {
+            id: "phy-6-1",
+            title: "نموذج بور لذرة الهيدروجين ومتسلسلات طيف الهيدروجين",
+            description: "فروض نموذج بور، حساب نصف قطر المدار وطاقة المستوى، ومتسلسلات: ليمان، بالمر، باشن، براكت، وفوند",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-6-2",
+            title: "المطياف (الاسبكترومتر) وأنواع الأطياف وخطوط فرونهوفر",
+            description: "تركيب ووظيفة المطياف وشروط الحصول على طيف نقي، طيف الانبعاث والامتصاص المستمر والخطي، والشمس وفرونهوفر",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-6-3",
+            title: "الأشعة السينية (أشعة إكس): توليدها، خصائصها، وتطبيقاتها",
+            description: "أنبوبة كولدج، الطيف المستمر (أشعة الفرملة) والطيف الخطي المميز لأشعة إكس، حيودها واستخدامها في الطب والصناعة",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "phy-u7",
+        title: "الفصل السابع: الليزر (ص 134 - 153)",
+        lessons: [
+          {
+            id: "phy-7-1",
+            title: "الانبعاث التلقائي والانبعاث المستحث وخصائص أشعة الليزر",
+            description: "مفهوم فترة العمر ومستوى الطاقة شبه المستقر، النقاء الطيفي، توازي الحزمة، الترابط الزماني والمكاني، وشدة الليزر",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-7-2",
+            title: "عناصر وأسس الفعل الليزري وحالة الإسكان المعكوس",
+            description: "الوسط الفعال، مصادر الإثارة وضخ الطاقة (الضوئي، الكهربي، الحراري)، والتجويف الرنيني وتضخيم الإشعاع",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-7-3",
+            title: "ليزر الهيليوم - نيون والتصوير المجسم ثلاثي الأبعاد (الهولوجرام)",
+            description: "تركيب ليزر He-Ne وميكانيكية عمله، التصوير العادي والمجسم الهولوجرافي، وتطبيقات الليزر في الطب والاتصالات",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "phy-u8",
+        title: "الفصل الثامن: الإلكترونيات الحديثة (ص 154 - 174)",
+        lessons: [
+          {
+            id: "phy-8-1",
+            title: "أشباه الموصلات النقية والتطعيم بالشوائب (بلورة n و p)",
+            description: "بلورة السيليكون، كسر والتئام الروابط والاتزان الحراري، شوائب مانحة (n-type) وشوائب مستقبلة (p-type)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-8-2",
+            title: "الوصلة الثنائية (الدايود pn junction) واستخداماتها",
+            description: "منطقة النضوب (القاحلة) والجهد الحاجز، التوصيل الأمامي والعكسي، واستخدام الدايود في تقويم التيار المتردد",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-8-3",
+            title: "الترانزستور ثنائي القطبية (BJT): تركيبه وتطبيقاته",
+            description: "الباعث والقاعدة والمجمع، الترانزستور كمكبر للتيار والجهد والقدرة، واستخدامه كمفتاح إلكتروني (Switch)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "phy-8-4",
+            title: "الإلكترونيات الرقمية والبوابات المنطقية (Logic Gates)",
+            description: "التحويل بين التناظري والرقمي (ADC/DAC)، البوابات المنطقية: العاكس NOT، التوافق AND، الاختيار OR، وجدول التحقق",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "chemistry",
+    name: "الكيمياء",
+    shortName: "الكيمياء",
+    icon: "FlaskConical",
+    color: "purple",
+    accentBg: "bg-purple-600",
+    lightBg: "bg-purple-50",
+    borderColor: "border-purple-600",
+    badgeColor: "bg-purple-100 text-purple-800 border-purple-300",
+    teacherName: "أ/ أحمد عادل",
+    teacherPhone: "",
+    tutoringLocation: "سنتر تعليمي",
+    currentLessonId: "chem-1-2", // علامة التوقف الافتراضية
+    units: [
+      {
+        id: "unit-c1",
+        title: "الباب الأول: العناصر الانتقالية (ص 1 - 23)",
+        lessons: [
+          {
+            id: "chem-1-1",
+            title: "عناصر السلسلة الانتقالية الأولى والأهمية الاقتصادية",
+            description: "موقع السلسلة الأولى بالجدول الدوري واستخدامات العناصر من السكانديوم حتى الخارصين والسبائك",
+            status: "mastered",
+            quiz: {
+              date: "2026-10-18",
+              score: 98,
+              totalScore: 100,
+              percentage: 98,
+              passed: true,
+              weaknesses: "إتقان ممتاز، مراجعة بسيطة لاستخدامات خامس أكسيد الفاناديوم.",
+              geminiFeedback: "استيعاب رائع لخواص واستخدامات عناصر السلسلة الأولى."
+            }
+          },
+          {
+            id: "chem-1-2",
+            title: "التركيب الإلكتروني، حالات التأكسد، والخواص العامة",
+            description: "الكتلة الذرية، نصف القطر، الخواص المغناطيسية (البارا والديا)، النشاط الحفزي، وتدرج طاقات التأين والأيونات الملونة",
+            status: "current", // علامة التوقف الحالية
+            quiz: null
+          },
+          {
+            id: "chem-1-3",
+            title: "استخلاص الحديد من خاماته وإنتاج الصلب والسبائك",
+            description: "تجهيز خامات الحديد، أفران الاختزال (الفرن العالي وفرن مدركس)، وأنواع السبائك (بينية، استبدالية، بينفلزية)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-1-4",
+            title: "خواص الحديد وتفاعلاته وأكاسيد الحديد الثلاثة ومخطط التحويلات",
+            description: "تفاعلات الحديد مع اللافلزات والأحماض، أكسيد الحديد الثنائي (FeO)، الثلاثي (Fe2O3)، والمغناطيسي (Fe3O4)",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-c2",
+        title: "الباب الثاني: التحليل الكيميائي (ص 24 - 43)",
+        lessons: [
+          {
+            id: "chem-2-1",
+            title: "التحليل الوصفي (الكيفي): الكشف عن الأنيونات (الشقوق الحامضية)",
+            description: "مجموعة حمض الهيدروكلوريك المخفف (HCl)، مجموعة حمض الكبريتيك المركز (H2SO4)، ومجموعة محلول كلوريد الباريوم (BaCl2)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-2-2",
+            title: "التحليل الوصفي (الكيفي): الكشف عن الكاتيونات (الشقوق القاعدية)",
+            description: "المجموعات التحليلية الأولى، الثانية (Cu2+)، الثالثة (Al3+, Fe2+, Fe3+)، والخامسة (Ca2+) والتجارب التأكيدية",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-2-3",
+            title: "التحليل الكيميائي الكمي (الحجمي والكتلي) والمعايرة",
+            description: "تفاعلات المعايرة والتعادل والأدلة الكيميائية، وطرق التحليل بالترسيب والتطاير ومسائل الحساب الكيميائي",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-c3",
+        title: "الباب الثالث: الاتزان الكيميائي (ص 44 - 72)",
+        lessons: [
+          {
+            id: "chem-3-1",
+            title: "النظام المتزن، التفاعلات التامة والانعكاسية، ومعدل التفاعل",
+            description: "مفهوم الاتزان الديناميكي، سرعة التفاعل، والعوامل المؤثرة: طبيعة المتفاعلات، التركيز، وقانون فعل الكتلة وثابت Kc",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-3-2",
+            title: "تأثير درجة الحرارة والضغط وقاعدة لوشاتيليه وثابت Kp",
+            description: "قاعدة لوشاتيليه، ثابت الاتزان الغازي Kp، وتأثير العوامل الحفازة والضوء على الاتزان",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-3-3",
+            title: "الاتزان الأيوني وقانون استفالد للتخفيف",
+            description: "المحاليل الإلكتروليتية، تأين الماء والأحماض والقواعد الضعيفة، وثابت التأين Ka و Kb وأيون الهيدرونيوم",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-3-4",
+            title: "الأس الهيدروجيني (pH و pOH)، التميؤ، وحاصل الإذابة (Ksp)",
+            description: "حساب pH و pOH، تميؤ الأملاح لمعرفة نوع المحلول، ومفهوم حاصل الإذابة Ksp للمركبات شحيحة الذوبان",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-c4",
+        title: "الباب الرابع: الكيمياء الكهربية (ص 73 - 102)",
+        lessons: [
+          {
+            id: "chem-4-1",
+            title: "الخلايا الجلفانية وإنتاج الطاقة الكهربية (خلية دانيال)",
+            description: "تفاعلات الأكسدة والاختزال التلقائية، تركيب خلية دانيال، القنطرة الملحية، وقطب الهيدروجين القياسي SHE",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-4-2",
+            title: "سلسلة الجهود الكهربية والقوة الدافعة الكهربية (emf)",
+            description: "ترتيب العناصر تنازلياً وتصاعدياً، حساب القوة الدافعة الكهربية emf للخلايا وتحديد تلقائية التفاعل الكيميائي",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-4-3",
+            title: "الخلايا الجلفانية الأولية والثانوية وتآكل المعادن (الصدأ)",
+            description: "خلية الزئبق، خلية الوقود، بطارية الرصاص الحامضية، بطارية أيون الليثيوم، وميكانيكية صدأ الحديد وطرق حمايته",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-4-4",
+            title: "الخلايا الإلكتروليتية (التحليل الكهربي) وقوانين فاراداي وتطبيقاتها",
+            description: "قانونا فاراداي الأول والثاني، القانون العام للتحليل الكهربي، وتطبيقات: الطلاء بالكهرباء، استخلاص الألومنيوم، وتنقية النحاس",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-c5",
+        title: "الباب الخامس: الكيمياء العضوية (ص 103 - 187)",
+        lessons: [
+          {
+            id: "chem-5-1",
+            title: "مقدمة الكيمياء العضوية وتجربة فوهلر والمركبات الهيدروكربونية",
+            description: "نظرية القوى الحيوية لبرزيليوس، الفرق بين المركبات العضوية وغير العضوية، الصيغة الجزيئية والبنائية، والأيزوميرزم والكشف عن C و H",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-5-2",
+            title: "الهيدروكربونات الأليفاتية المفتوحة المشبعة: الألكانات (الميثان)",
+            description: "تسمية الألكانات بنظام الأيوباك IUPAC، تحضير غاز الميثان في المعمل، تفاعلات الاحتراق والهلجنة والتكسير الحراري الحفزي",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-5-3",
+            title: "الألكينات (الأوليفينات) وغاز الإيثين وقاعدة ماركونيكوف",
+            description: "تحضير الإيثين، تفاعلات الإضافة (الهدرجة، الهلجنة، هاليدات الهيدروجين وقاعدة ماركونيكوف، الهيدرة الحفزية، تفاعل باير، والبلمرة)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-5-4",
+            title: "الألكاينات (الأسيتيلينات) وغاز الإيثاين",
+            description: "تحضير غاز الإيثاين (الأسيتيلين)، خواصه وتفاعلات الإضافة والأكسدة والهيدرة الحفزية لإنتاج الأسيتالدهيد وحمض الأسيتيك",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-5-5",
+            title: "الهيدروكربونات الحلقية (الألكانات الحلقية والبنزين العطري)",
+            description: "الألكانات الحلقية وثباتها، البنزين العطري (التركيب البنائي لكيكولي)، تحضير البنزين وتفاعلاته (النيترة، السلفنة، وفريدل كرافت)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-5-6",
+            title: "مشتقات الهيدروكربونات: الكحولات والفينولات",
+            description: "المجموعات الوظيفية، تصنيف الكحولات وتسميتها، تحضير الإيثانول وخواصه، الفينول وتفاعلاته والكشف عنه وحمض البكريك",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-5-7",
+            title: "مشتقات الهيدروكربونات: الأحماض الكربوكسيلية والأحماض الأمينية",
+            description: "الأحماض الأليفاتية والأروماتية، حمض الأسيتيك وحمض البنزويك، الخواص الكيميائية والفيزيائية، الأحماض في حياتنا، والأحماض الأمينية",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "chem-5-8",
+            title: "مشتقات الهيدروكربونات: الإسترات وتطبيقاتها الحيوية والطبية",
+            description: "تسمية الإسترات، تحضيرها والتحلل المائي والنشادري، الدهون والزيوت، صناعة الصابون، البولي إستر (الداكرون)، والأسبرين وزيت المروخ",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "arabic",
+    name: "اللغة العربية",
+    shortName: "العربية",
+    icon: "BookOpen",
+    color: "amber",
+    accentBg: "bg-amber-600",
+    lightBg: "bg-amber-50",
+    borderColor: "border-amber-600",
+    badgeColor: "bg-amber-100 text-amber-800 border-amber-300",
+    teacherName: "أ/ هشام سعيد",
+    teacherPhone: "",
+    tutoringLocation: "سنتر تعليمي",
+    currentLessonId: "ar-1-2", // المتوقفين عنده
+    units: [
+      {
+        id: "unit-a1",
+        title: "الوحدة الأولى: قواعد النحو والإملاء",
+        lessons: [
+          {
+            id: "ar-1-1",
+            title: "همزتا الوصل والقطع وأل الشمسية والقمرية والتاء المربوطة والمفتوحة",
+            description: "الضوابط الإملائية ورسم الهمزة المتوسطة والمتطرفة",
+            status: "mastered",
+            quiz: {
+              date: "2026-10-14",
+              score: 95,
+              totalScore: 100,
+              percentage: 95,
+              passed: true,
+              weaknesses: "مراجعة كتابة الهمزة المتطرفة عند اتصالها بضمير النصب.",
+              geminiFeedback: "اجتياز ممتاز، تم الالتزام بحد الـ 95%."
+            }
+          },
+          {
+            id: "ar-1-2",
+            title: "المشتقات العاملة (اسم الفاعل، صيغ المبالغة، اسم المفعول)",
+            description: "شروط إعمال المشتقات وإعراب معمولها المقترن بأل أو المجرد",
+            status: "current", // المتوقفين عنده
+            quiz: null
+          },
+          {
+            id: "ar-1-3",
+            title: "اسما التفضيل وحالاته وأحكامه الإعرابية",
+            description: "حالات اسم التفضيل الأربعة ومطابقته للمفضل من حيث التذكير والتأنيث والجمع",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-a2",
+        title: "البلاغة والأدب",
+        lessons: [
+          {
+            id: "ar-2-1",
+            title: "التجربة الشعرية ومفهوم الوحدة العضوية",
+            description: "عناصر التجربة الشعرية: الوجدان والفكر والصور التعبيرية",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "ar-2-2",
+            title: "مدرسة الإحياء والبعث وجيل التطوير",
+            description: "أعلام المدرسة وخصائص الشعر ومظاهر التطوير عند شوقي وحافظ",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "english",
+    name: "اللغة الإنجليزية (English)",
+    shortName: "الإنجليزية",
+    icon: "Languages",
+    color: "rose",
+    accentBg: "bg-rose-600",
+    lightBg: "bg-rose-50",
+    borderColor: "border-rose-600",
+    badgeColor: "bg-rose-100 text-rose-800 border-rose-300",
+    teacherName: "Mr. السيد عبد السميع",
+    teacherPhone: "",
+    tutoringLocation: "سنتر تعليمي",
+    currentLessonId: "eng-1-1",
+    units: [
+      {
+        id: "unit-e1",
+        title: "Unit 1: Inside the World of Care",
+        lessons: [
+          {
+            id: "eng-1-1",
+            title: "Lesson 1: My Day in the Hospital (Reading & Idioms)",
+            description: "A Day in the Life of a Hospital Nurse, medical emergencies, and the idiom 'spring into action'",
+            status: "current",
+            quiz: null
+          },
+          {
+            id: "eng-1-2",
+            title: "Lesson 2 & 3: Emergency Call & Tired Hands, Caring Hearts (Grammar)",
+            description: "Grammar Focus: Present Perfect Simple (Active & Passive voice) and medical vocabulary",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-1-3",
+            title: "Lesson 4 & 5: Beyond the White Coat & My Blog Post (Grammar & Writing)",
+            description: "Grammar Focus: Present Perfect Continuous, weather idioms, and structure of a Blog Post",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-e2",
+        title: "Unit 2: The Power of Machines",
+        lessons: [
+          {
+            id: "eng-2-1",
+            title: "Lesson 1 & 2: Machines in Egypt & Technical Support (Vocab & Reading)",
+            description: "History of machines in Egypt, modern automation, and IT technical support vocabulary",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-2-2",
+            title: "Lesson 3 & 4: The Role of Machines & Our Machine-Driven World (Grammar)",
+            description: "Grammar Focus: Reported Speech (Statements, Commands, and Requests) and artificial intelligence",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-2-3",
+            title: "Lesson 5: For or Against? (Writing Argumentative Essays)",
+            description: "Writing an Argumentative Essay: Claims, evidence, counter-arguments, and conclusion",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-e3",
+        title: "Unit 3: Protect Nature, Protect Future",
+        lessons: [
+          {
+            id: "eng-3-1",
+            title: "Lesson 1 & 2: Climate Justice & Interview with a Meteorologist",
+            description: "Global climate activism, greenhouse gas emissions, weather expressions, and compound nouns",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-3-2",
+            title: "Lesson 3 & 4: Climate Change and Coastal Cities & Global Climate (Grammar)",
+            description: "Grammar Focus: Modal Verbs for Deduction in the Present and Past (must, can't, might have, should have)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-3-3",
+            title: "Lesson 5 & Review 1: How to Help Our Environment (Writing & Revision)",
+            description: "Writing a Persuasive Essay on environmental issues and Review 1 (Units 1 - 3 comprehensive test)",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-e4",
+        title: "Unit 4: Marine Life",
+        lessons: [
+          {
+            id: "eng-4-1",
+            title: "Lesson 1 & 2: A Colorful Underwater City & The Ocean’s Gentle Giants",
+            description: "Coral reefs, Red Sea marine biodiversity, whale conservation, and idioms (a stitch in time saves nine)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-4-2",
+            title: "Lesson 3 & 4: The Underwater World & Into the Depth of the Ocean (Grammar)",
+            description: "Grammar Focus: Adjectives and Compound Adjectives (forms, hyphens, and usage before/after nouns)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-4-3",
+            title: "Lesson 5: Ocean Legends and Storytelling (Writing Short Stories)",
+            description: "Structure of a Short Story: Setting the scene, development, tension, and resolution",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-e5",
+        title: "Unit 5: From Muscles to Mindset",
+        lessons: [
+          {
+            id: "eng-5-1",
+            title: "Lesson 1 & 2: Discover Your Future & Skills for the Future (Reading & Vocab)",
+            description: "Future workforce, digital transformation, growth mindset, and soft skills versus AI automation",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-5-2",
+            title: "Lesson 3 & 4: The Rapid Change in Technology & Power of Human Connection (Grammar)",
+            description: "Grammar Focus: The Causative (Have & Get in Active and Passive forms: have someone do vs get someone to do)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-5-3",
+            title: "Lesson 5: Life in the Year 2050 - My AI Assistant (Writing Narrative Stories)",
+            description: "Narrative Writing: Characters, futuristic setting, plot order, and reflection on technology and humanity",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-e6",
+        title: "Unit 6: Let’s Hang Out!",
+        lessons: [
+          {
+            id: "eng-6-1",
+            title: "Lesson 1 & 2: An Embarrassing Moment & The Power of Socializing",
+            description: "Friendship and health benefits, emotional intelligence, and social idioms (hit the town, pale as a ghost)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-6-2",
+            title: "Lesson 3 & 4: A Beautiful Day with Friends & Why Hanging Out Matters (Grammar)",
+            description: "Grammar Focus: Reported Questions (Yes/No questions with if/whether, and Wh-questions word order and tenses)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-6-3",
+            title: "Lesson 5 & Review 2: Tell the World What You Saw! (Writing & Revision)",
+            description: "Writing an Online Review (film/book/restaurant) and Review 2 (Units 4 - 6 comprehensive test)",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-e-novel-1",
+        title: "📖 The Novel: The Count of Monte Cristo (Term 1: Chapters 1 to 6)",
+        lessons: [
+          {
+            id: "eng-nov-1",
+            title: "Chapter 1: The Arrival at Marseilles",
+            description: "Edmond Dantès returns on the Pharaon, promises of captaincy, Mercédès' love, and the jealousy of Fernand and Danglars",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-nov-2",
+            title: "Chapter 2: A Treacherous Plot",
+            description: "Danglars and Fernand write the false denunciation letter accusing Edmond of carrying a message from Napoleon",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-nov-3",
+            title: "Chapter 3: Betrayal and Arrest",
+            description: "Edmond is arrested at his betrothal feast, interrogated by Villefort who burns the letter to save his own father, and sends Edmond to prison",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-nov-4",
+            title: "Chapter 4: The Prison of Château d’If",
+            description: "Despair inside the fortress prison, the mysterious scratching sound, and meeting the wise prisoner Abbé Faria",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-nov-5",
+            title: "Chapter 5: A Ray of Hope",
+            description: "Abbé Faria becomes Edmond's father and teacher (languages, sciences, and history), revealing that knowledge is power and plotting justice",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-nov-6",
+            title: "Chapter 6: The Secret of the Treasure & Escape",
+            description: "The secret map of the Spada fortune on Monte Cristo island, the death of Abbé Faria, and Edmond's daring escape in the burial sack",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-e7",
+        title: "Unit 7 & 8: At the Airport & A Journey Through Time (Term 2)",
+        lessons: [
+          {
+            id: "eng-7-1",
+            title: "Unit 7: At the Airport (Grammar: Past Perfect & Continuous)",
+            description: "Airport adventures, travel vocabulary, and the Past Perfect and Past Perfect Continuous tenses",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-7-2",
+            title: "Unit 8: A Journey Through Time (Grammar: Active & Passive Voice)",
+            description: "Crossroads of civilizations, ancient Egyptian and world history, and Active vs Passive voice in writing",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-e9",
+        title: "Unit 9 & 10: The Universe’s Mysteries & Hospitality (Term 2)",
+        lessons: [
+          {
+            id: "eng-9-1",
+            title: "Unit 9: The Universe’s Mysteries (Grammar: Verb Patterns)",
+            description: "Black holes, event horizon, cosmic mysteries, and verbs followed by to-infinitive vs gerund (-ing)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-10-1",
+            title: "Unit 10: People’s Hospitality and Kindness (Grammar: Relative Clauses)",
+            description: "Cultural expressions of kindness, and defining vs non-defining relative clauses (who, which, that, where, whose)",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-e11",
+        title: "Unit 11 & 12: Literature & University Life (Term 2)",
+        lessons: [
+          {
+            id: "eng-11-1",
+            title: "Unit 11: Literature (Poetry, Drama & Comparative Adjectives)",
+            description: "The Joy of Poetry, William Wordsworth's Daffodils, and comparative and superlative adjective rules",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-12-1",
+            title: "Unit 12: University Life & Career Choices (Grammar: Question Tags)",
+            description: "Choosing university majors, apprenticeships, and forming question tags (e.g. aren't I?, will you?)",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      },
+      {
+        id: "unit-e-novel-2",
+        title: "📖 The Novel: The Count of Monte Cristo (Term 2: Chapters 7 to 12)",
+        lessons: [
+          {
+            id: "eng-nov-7",
+            title: "Chapter 7 & 8: Escape to Freedom & The Island of Monte Cristo",
+            description: "Joining the smugglers, landing on the rocky island of Monte Cristo, and uncovering the legendary Spada treasure",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-nov-9",
+            title: "Chapter 9 & 10: A New Identity & Justice and Revenge",
+            description: "Arrival in Paris in disguise, testing society, and Edmond's calculated retribution against Caderousse and his enemies",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "eng-nov-11",
+            title: "Chapter 11 & 12: The Fall of the Guilty & A New Dawn",
+            description: "The ruin of Danglars, Villefort, and Fernand, saving Maximilien and Valentine, peace with Mercédès, and sailing into freedom with Haydée",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "geology",
+    name: "الجيولوجيا وعلوم الأرض",
+    shortName: "الجيولوجيا",
+    icon: "Mountain",
+    color: "amber",
+    accentBg: "bg-amber-700",
+    lightBg: "bg-amber-50",
+    borderColor: "border-amber-700",
+    badgeColor: "bg-amber-100 text-amber-900 border-amber-300",
+    teacherName: "أ/ القزاز",
+    teacherPhone: "",
+    tutoringLocation: "سنتر تعليمي",
+    currentLessonId: "geo-1-1",
+    customNotice: "📌 تنويه: منهج مادة الجيولوجيا موجود في الجزء الأخير من كتاب الأحياء (الفصل السابع: الأحياء وعلوم الأرض ص 143 - 167) لدمجهما معاً في كتاب واحد من قِبل الوزارة.",
+    units: [
+      {
+        id: "unit-g1",
+        title: "منهج الجيولوجيا: الأحياء وعلوم الأرض (ص 143 - 167 من كتاب الأحياء)",
+        lessons: [
+          {
+            id: "geo-1-1",
+            title: "الدرس 1: علم الجيولوجيا ومكونات كوكب الأرض (القشرة، الوشاح، الأسينوسفير، واللب).",
+            description: "أفرع علم الجيولوجيا وأهميتها، مكونات كوكب الأرض: القشرة، الوشاح، الأسينوسفير، واللب الخارجي والداخلي، والغلاف المائي والجوي (ص 144 - 146)",
+            status: "current",
+            quiz: null
+          },
+          {
+            id: "geo-1-2",
+            title: "الدرس 2: التراكيب الجيولوجية الأولية والثانوية (الطيات، الفوالق، الفواصل، وتراكيب عدم التوافق).",
+            description: "التراكيب الأولية والتكتونية، الطيات المحدبة والمقعرة، الفوالق، الفواصل، وأنواع وشواهد أسطح عدم التوافق الثلاثة (ص 146 - 151)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "geo-1-3",
+            title: "الدرس 3: المعادن، التركيب البلوري، الخواص الفيزيائية والتماسكية، ومقياس موهس للصلادة.",
+            description: "تعريف المعدن، الأنظمة والبلورات السبعة، الخواص البصرية والتماسكية، مقياس موهس للصلادة، الانفصام والمكسر والوزن النوعي (ص 152 - 158)",
+            status: "not_started",
+            quiz: null
+          },
+          {
+            id: "geo-1-4",
+            title: "الدرس 4: أنواع الصخور (النارية والرسوبية والمتحولة) ودورة الصخور في الطبيعة.",
+            description: "الصخور النارية (متسلسلة تفاعلات بوين)، الصخور الرسوبية (فتاتية وكيميائية وعضوية)، الصخور المتحولة، ومخطط دورة الصخور (ص 159 - 167)",
+            status: "not_started",
+            quiz: null
+          }
+        ]
+      }
+    ]
+  }
+];
+
+export const initialSchedule = [
+  {
+    id: "sch-1",
+    subjectId: "physics",
+    day: "السبت",
+    time: "10:00 ص - 11:00 ص",
+    teacher: "أ/ محمد طارق",
+    location: "سنتر تعليمي",
+    notes: "مراجعة وحل تدريبات الفيزياء"
+  },
+  {
+    id: "sch-2",
+    subjectId: "arabic",
+    day: "السبت",
+    time: "11:00 ص - 12:00 م",
+    teacher: "أ/ هشام سعيد",
+    location: "سنتر تعليمي",
+    notes: "نحو وبلاغة"
+  },
+  {
+    id: "sch-3",
+    subjectId: "english",
+    day: "السبت",
+    time: "12:00 م - 01:00 م",
+    teacher: "Mr. السيد عبد السميع",
+    location: "سنتر تعليمي",
+    notes: "Grammar & Vocabulary"
+  },
+  {
+    id: "sch-4",
+    subjectId: "geology",
+    day: "السبت",
+    time: "01:00 م - 02:00 م",
+    teacher: "أ/ القزاز",
+    location: "سنتر تعليمي",
+    notes: "شرح وتطبيقات الجيولوجيا"
+  },
+  {
+    id: "sch-5",
+    subjectId: "chemistry",
+    day: "الأحد",
+    time: "09:30 ص - 11:00 ص",
+    teacher: "أ/ أحمد عادل",
+    location: "سنتر تعليمي",
+    notes: "مسائل ومعادلات الكيمياء"
+  },
+  {
+    id: "sch-6",
+    subjectId: "biology",
+    day: "الأحد",
+    time: "11:00 ص - 12:00 م",
+    teacher: "أ/ القزاز",
+    location: "سنتر تعليمي",
+    notes: "شرح ورسومات الأحياء"
+  }
+];
+
+export const motivationalQuotes = [
+  "✨ التوفيق حليف من ثابر؛ خطوة كل يوم تصنع تفوق الغد!",
+  "🌟 من طلب العلا سهر الليالي، والنتيجة ستكون فخراً للعائلة كلها بإذن الله.",
+  "🎯 التركيز في أوجه القصور ومعالجتها هو السر الحقيقي للدرجات النهائية.",
+  "💪 لا شيء مستحيل مع التكرار والتدريب المستمر، ثقتنا فيكِ بلا حدود!"
+];
