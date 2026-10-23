@@ -9,22 +9,22 @@ import SyllabusEditorModal from './components/SyllabusEditorModal';
 import { initialSubjects, initialSchedule } from './data/defaultData';
 
 export default function App() {
-  // Load from localStorage or defaults with automatic cache migration for v5 (Arabic Story & Branches)
+  // Load from localStorage or defaults with automatic cache migration for v6 (Arabic Story & Grammar)
   const [subjects, setSubjects] = useState(() => {
     try {
       const dataVersion = localStorage.getItem('study_tracker_data_version');
       const saved = localStorage.getItem('study_tracker_subjects');
       
-      // If version is v5_arabic_story and has Arabic story units, use it
-      if (saved && dataVersion === 'v5_arabic_story') {
+      // If version is v6_arabic_grammar_story and has Arabic grammar units, use it
+      if (saved && dataVersion === 'v6_arabic_grammar_story') {
         const parsed = JSON.parse(saved);
         const arab = parsed.find(s => s.id === 'arabic');
-        if (arab && arab.units.some(u => u.branch === 'story')) {
+        if (arab && arab.units.some(u => u.id === 'unit-ar-gram-1')) {
           return parsed;
         }
       }
-      // Migrate and reset to clean initial subjects with full Arabic Story
-      localStorage.setItem('study_tracker_data_version', 'v5_arabic_story');
+      // Migrate and reset to clean initial subjects with full Arabic Story & Grammar
+      localStorage.setItem('study_tracker_data_version', 'v6_arabic_grammar_story');
       localStorage.setItem('study_tracker_subjects', JSON.stringify(initialSubjects));
       return initialSubjects;
     } catch {
@@ -250,7 +250,7 @@ export default function App() {
     if (window.confirm("هل تريد استعادة البيانات الأصلية النظيفة؟ سيتم تصفير أي تعديلات.")) {
       setSubjects(initialSubjects);
       setSchedule(initialSchedule);
-      localStorage.setItem('study_tracker_data_version', 'v5_arabic_story');
+      localStorage.setItem('study_tracker_data_version', 'v6_arabic_grammar_story');
       localStorage.setItem('study_tracker_subjects', JSON.stringify(initialSubjects));
       localStorage.removeItem('study_tracker_schedule');
     }

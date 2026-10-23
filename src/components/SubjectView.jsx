@@ -421,6 +421,7 @@ export default function SubjectView({
                     }`}
                   >
                     <span>📝 كتاب النحو</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 font-bold">12 وحدة - 60 درساً</span>
                   </button>
                   <button
                     onClick={() => setSelectedBranch('other')}
@@ -435,7 +436,7 @@ export default function SubjectView({
                 </div>
 
                 <div className="text-[11px] font-bold text-amber-800">
-                  تم إدراج كتاب قصة الأيام كاملاً (المدخل + الجزأين 1 و 2)
+                  تم إدراج قصة الأيام (26 درساً) وكتاب النحو كاملاً (12 وحدة) ✨
                 </div>
               </div>
             )}
