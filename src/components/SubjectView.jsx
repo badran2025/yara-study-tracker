@@ -431,12 +431,13 @@ export default function SubjectView({
                         : 'bg-white text-slate-700 hover:bg-amber-100 border border-amber-200'
                     }`}
                   >
-                    <span>📚 باقي الفروع</span>
+                    <span>📚 الكتاب الثالث (قراءة، نصوص، بلاغة، تدريبات)</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 font-bold">24 درساً</span>
                   </button>
                 </div>
 
                 <div className="text-[11px] font-bold text-amber-800">
-                  تم إدراج قصة الأيام (26 درساً) وكتاب النحو كاملاً (12 وحدة) ✨
+                  منهج اللغة العربية مكتمل 100% بكافة كتبه الثلاثة (110 دروس) 🎓✨
                 </div>
               </div>
             )}
