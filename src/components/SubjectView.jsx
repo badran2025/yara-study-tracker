@@ -52,6 +52,7 @@ export default function SubjectView({
 }) {
   const [subjectTab, setSubjectTab] = useState('syllabus'); // 'syllabus' | 'revisions'
   const [filterStatus, setFilterStatus] = useState('all'); // all, current, studied, unstudied, needs_review, mastered
+  const [selectedBranch, setSelectedBranch] = useState('all'); // for arabic: 'all' | 'story' | 'grammar' | 'other'
   const [collapsedUnits, setCollapsedUnits] = useState({});
   const [toast, setToast] = useState(null);
 
@@ -385,6 +386,60 @@ export default function SubjectView({
         {/* TAB 1: SYLLABUS & LESSONS */}
         {subjectTab === 'syllabus' && (
           <div>
+            {/* Branch Filter Bar for Arabic Subject */}
+            {activeSubject.id === 'arabic' && (
+              <div className="px-5 py-3 bg-amber-50/80 border-b border-amber-200/80 flex flex-wrap items-center justify-between gap-2.5">
+                <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                  <span className="font-black text-amber-950 ml-1">فروع اللغة العربية:</span>
+                  <button
+                    onClick={() => setSelectedBranch('all')}
+                    className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
+                      selectedBranch === 'all'
+                        ? 'bg-amber-600 text-white shadow-sm'
+                        : 'bg-white text-slate-700 hover:bg-amber-100 border border-amber-200'
+                    }`}
+                  >
+                    جميع الفروع
+                  </button>
+                  <button
+                    onClick={() => setSelectedBranch('story')}
+                    className={`px-3 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
+                      selectedBranch === 'story'
+                        ? 'bg-amber-600 text-white shadow-sm'
+                        : 'bg-white text-slate-700 hover:bg-amber-100 border border-amber-200'
+                    }`}
+                  >
+                    <span>📖 قصة الأيام (طه حسين)</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 font-bold">26 فصلاً ودرساً</span>
+                  </button>
+                  <button
+                    onClick={() => setSelectedBranch('grammar')}
+                    className={`px-3 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
+                      selectedBranch === 'grammar'
+                        ? 'bg-amber-600 text-white shadow-sm'
+                        : 'bg-white text-slate-700 hover:bg-amber-100 border border-amber-200'
+                    }`}
+                  >
+                    <span>📝 كتاب النحو</span>
+                  </button>
+                  <button
+                    onClick={() => setSelectedBranch('other')}
+                    className={`px-3 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
+                      selectedBranch === 'other'
+                        ? 'bg-amber-600 text-white shadow-sm'
+                        : 'bg-white text-slate-700 hover:bg-amber-100 border border-amber-200'
+                    }`}
+                  >
+                    <span>📚 باقي الفروع</span>
+                  </button>
+                </div>
+
+                <div className="text-[11px] font-bold text-amber-800">
+                  تم إدراج كتاب قصة الأيام كاملاً (المدخل + الجزأين 1 و 2)
+                </div>
+              </div>
+            )}
+
             {/* Filter Bar */}
             <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/60 flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-1.5 text-xs">
@@ -472,6 +527,11 @@ export default function SubjectView({
             <div className="p-5 sm:p-6 space-y-6">
               {activeSubject.units.map((unit, unitIdx) => {
                 const isCollapsed = collapsedUnits[unit.id];
+
+                // Arabic branch filter check
+                if (activeSubject.id === 'arabic' && selectedBranch !== 'all' && unit.branch && unit.branch !== selectedBranch) {
+                  return null;
+                }
                 
                 // Filter lessons
                 const filteredLessons = unit.lessons.filter(l => {
@@ -506,9 +566,26 @@ export default function SubjectView({
                         <span className="w-7 h-7 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">
                           {unitIdx + 1}
                         </span>
-                        <h3 className="font-extrabold text-slate-800 text-sm sm:text-base">
-                          {unit.title}
-                        </h3>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-extrabold text-slate-800 text-sm sm:text-base">
+                            {unit.title}
+                          </h3>
+                          {unit.branch === 'story' && (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300">
+                              القصة
+                            </span>
+                          )}
+                          {unit.branch === 'grammar' && (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-300">
+                              النحو
+                            </span>
+                          )}
+                          {unit.branch === 'other' && (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-blue-100 text-blue-900 border border-blue-300">
+                              باقي الفروع
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       <div className="flex items-center gap-3">

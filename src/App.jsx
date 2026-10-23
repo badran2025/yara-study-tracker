@@ -9,26 +9,22 @@ import SyllabusEditorModal from './components/SyllabusEditorModal';
 import { initialSubjects, initialSchedule } from './data/defaultData';
 
 export default function App() {
-  // Load from localStorage or defaults with automatic cache cleaning for v4
+  // Load from localStorage or defaults with automatic cache migration for v5 (Arabic Story & Branches)
   const [subjects, setSubjects] = useState(() => {
     try {
       const dataVersion = localStorage.getItem('study_tracker_data_version');
       const saved = localStorage.getItem('study_tracker_subjects');
       
-      // If version is v4_clean and has no old dummy mock dates, use it
-      if (saved && dataVersion === 'v4_clean') {
+      // If version is v5_arabic_story and has Arabic story units, use it
+      if (saved && dataVersion === 'v5_arabic_story') {
         const parsed = JSON.parse(saved);
-        const hasDummyDate = parsed.some(s => 
-          s.units.some(u => 
-            u.lessons.some(l => l.quiz?.date === '2026-10-12' || l.quiz?.date === '2026-10-18' || l.quiz?.date === '2026-10-14')
-          )
-        );
-        if (!hasDummyDate) {
+        const arab = parsed.find(s => s.id === 'arabic');
+        if (arab && arab.units.some(u => u.branch === 'story')) {
           return parsed;
         }
       }
-      // Migrate and reset to clean initial subjects
-      localStorage.setItem('study_tracker_data_version', 'v4_clean');
+      // Migrate and reset to clean initial subjects with full Arabic Story
+      localStorage.setItem('study_tracker_data_version', 'v5_arabic_story');
       localStorage.setItem('study_tracker_subjects', JSON.stringify(initialSubjects));
       return initialSubjects;
     } catch {
@@ -254,7 +250,7 @@ export default function App() {
     if (window.confirm("هل تريد استعادة البيانات الأصلية النظيفة؟ سيتم تصفير أي تعديلات.")) {
       setSubjects(initialSubjects);
       setSchedule(initialSchedule);
-      localStorage.setItem('study_tracker_data_version', 'v4_clean');
+      localStorage.setItem('study_tracker_data_version', 'v5_arabic_story');
       localStorage.setItem('study_tracker_subjects', JSON.stringify(initialSubjects));
       localStorage.removeItem('study_tracker_schedule');
     }
