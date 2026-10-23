@@ -36,8 +36,8 @@ export default function StatsOverview({
     subject.units.forEach(unit => {
       unit.lessons.forEach(lesson => {
         totalLessons++;
-        if (lesson.status === 'mastered') masteredLessons++;
-        if (lesson.status === 'needs_review') needsReviewLessons++;
+        if (lesson.quiz && lesson.quiz.percentage >= 95) masteredLessons++;
+        if (lesson.quiz && lesson.quiz.percentage < 95) needsReviewLessons++;
         if (lesson.status === 'current') inProgressLessons++;
       });
     });

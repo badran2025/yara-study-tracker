@@ -9,28 +9,27 @@ import SyllabusEditorModal from './components/SyllabusEditorModal';
 import { initialSubjects, initialSchedule } from './data/defaultData';
 
 export default function App() {
-  // Load from localStorage or defaults
+  // Load from localStorage or defaults with automatic cache cleaning for v4
   const [subjects, setSubjects] = useState(() => {
     try {
+      const dataVersion = localStorage.getItem('study_tracker_data_version');
       const saved = localStorage.getItem('study_tracker_subjects');
-      if (saved) {
+      
+      // If version is v4_clean and has no old dummy mock dates, use it
+      if (saved && dataVersion === 'v4_clean') {
         const parsed = JSON.parse(saved);
-        const bio = parsed.find(s => s.id === 'biology');
-        const phy = parsed.find(s => s.id === 'physics');
-        const eng = parsed.find(s => s.id === 'english');
-        const geo = parsed.find(s => s.id === 'geology');
-        // Ensure clean neutral notice and Biology 6 chapters + Physics 8 chapters + English 12 units + novel
-        if (
-          !geo || !geo.customNotice || geo.customNotice.includes('حصة السبت') ||
-          !bio || !bio.customNotice || bio.units.length > 6 ||
-          !phy || phy.units.length < 8 ||
-          !eng || eng.units.length < 8
-        ) {
-          localStorage.setItem('study_tracker_subjects', JSON.stringify(initialSubjects));
-          return initialSubjects;
+        const hasDummyDate = parsed.some(s => 
+          s.units.some(u => 
+            u.lessons.some(l => l.quiz?.date === '2026-10-12' || l.quiz?.date === '2026-10-18' || l.quiz?.date === '2026-10-14')
+          )
+        );
+        if (!hasDummyDate) {
+          return parsed;
         }
-        return parsed;
       }
+      // Migrate and reset to clean initial subjects
+      localStorage.setItem('study_tracker_data_version', 'v4_clean');
+      localStorage.setItem('study_tracker_subjects', JSON.stringify(initialSubjects));
       return initialSubjects;
     } catch {
       return initialSubjects;
@@ -102,7 +101,6 @@ export default function App() {
           if (lesson.id === lessonId) {
             return {
               ...lesson,
-              isStudied: true, // Marked as reached/studied
               status: lesson.quiz 
                 ? (lesson.quiz.percentage >= 95 ? 'mastered' : 'needs_review')
                 : 'current'
@@ -133,7 +131,7 @@ export default function App() {
         ...unit,
         lessons: unit.lessons.map(lesson => {
           if (lesson.id === lessonId) {
-            const currentlyStudied = Boolean(lesson.isStudied ?? (lesson.status === 'mastered' || lesson.status === 'current'));
+            const currentlyStudied = lesson.isStudied === true;
             return {
               ...lesson,
               isStudied: !currentlyStudied
@@ -166,6 +164,32 @@ export default function App() {
               isStudied: true,
               quiz: quizData,
               status: isPassed ? 'mastered' : 'needs_review'
+            };
+          }
+          return lesson;
+        })
+      }));
+
+      return {
+        ...sub,
+        units: updatedUnits
+      };
+    }));
+  };
+
+  // Handler: Delete / Reset Quiz result
+  const handleDeleteQuiz = (subjectId, lessonId) => {
+    setSubjects(prev => prev.map(sub => {
+      if (sub.id !== subjectId) return sub;
+
+      const updatedUnits = sub.units.map(unit => ({
+        ...unit,
+        lessons: unit.lessons.map(lesson => {
+          if (lesson.id === lessonId) {
+            return {
+              ...lesson,
+              quiz: null,
+              status: lesson.id === sub.currentLessonId ? 'current' : 'not_started'
             };
           }
           return lesson;
@@ -227,10 +251,11 @@ export default function App() {
 
   // Reset to default data
   const handleResetData = () => {
-    if (window.confirm("هل تريد استعادة البيانات الافتراضية؟ سيتم مسح أي تعديلات حالية.")) {
+    if (window.confirm("هل تريد استعادة البيانات الأصلية النظيفة؟ سيتم تصفير أي تعديلات.")) {
       setSubjects(initialSubjects);
       setSchedule(initialSchedule);
-      localStorage.removeItem('study_tracker_subjects');
+      localStorage.setItem('study_tracker_data_version', 'v4_clean');
+      localStorage.setItem('study_tracker_subjects', JSON.stringify(initialSubjects));
       localStorage.removeItem('study_tracker_schedule');
     }
   };
@@ -291,6 +316,7 @@ export default function App() {
             onToggleStudiedLesson={handleToggleStudiedLesson}
             onOpenTestModal={(subj, less) => setTestModal({ isOpen: true, subject: subj, lesson: less })}
             onOpenSyllabusEditor={(subj) => setSyllabusModal({ isOpen: true, subject: subj })}
+            onDeleteQuiz={handleDeleteQuiz}
             onBackToHub={() => setCurrentScreen('subjects_hub')}
             onBackToHome={() => setCurrentScreen('home')}
           />
@@ -316,6 +342,7 @@ export default function App() {
         lesson={testModal.lesson}
         onClose={() => setTestModal({ isOpen: false, subject: null, lesson: null })}
         onSaveQuiz={handleSaveQuiz}
+        onDeleteQuiz={handleDeleteQuiz}
       />
 
       {/* Syllabus & Content Editor Modal */}

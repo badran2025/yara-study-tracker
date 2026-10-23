@@ -41,13 +41,13 @@ export default function HomePortal({
     subject.units.forEach(unit => {
       unit.lessons.forEach(lesson => {
         totalLessons++;
-        if (lesson.isStudied || lesson.status === 'mastered' || lesson.status === 'current') {
+        if (lesson.isStudied === true) {
           studiedLessons++;
         }
-        if (lesson.status === 'mastered' || (lesson.quiz && lesson.quiz.percentage >= 95)) {
+        if (lesson.quiz && lesson.quiz.percentage >= 95) {
           masteredLessons++;
         }
-        if (lesson.status === 'needs_review' || (lesson.quiz && lesson.quiz.percentage < 95)) {
+        if (lesson.quiz && lesson.quiz.percentage < 95) {
           needsReviewLessons++;
         }
       });

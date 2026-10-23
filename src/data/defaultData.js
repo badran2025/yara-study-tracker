@@ -286,16 +286,9 @@ export const initialSubjects = [
             id: "phy-1-1",
             title: "شدة التيار، فرق الجهد، وقانون أوم والمقاومة النوعية والتوصيلية",
             description: "كمية الشحنة والزمن، المقاومة والعوامل المؤثرة، المقاومة النوعية والتوصيلية الكهربية لفلزات الموصلات",
-            status: "mastered",
-            quiz: {
-              date: "2026-10-12",
-              score: 96,
-              totalScore: 100,
-              percentage: 96,
-              passed: true,
-              weaknesses: "إتقان ممتاز، مراجعة بسيطة لوحدات القياس المكافئة للأوم متر.",
-              geminiFeedback: "أداء متميز وفهم عميق للعلاقة بين المقاومة وأبعاد الموصل."
-            }
+            status: "not_started",
+            quiz: null,
+            isStudied: false
           },
           {
             id: "phy-1-2",
@@ -569,16 +562,9 @@ export const initialSubjects = [
             id: "chem-1-1",
             title: "عناصر السلسلة الانتقالية الأولى والأهمية الاقتصادية",
             description: "موقع السلسلة الأولى بالجدول الدوري واستخدامات العناصر من السكانديوم حتى الخارصين والسبائك",
-            status: "mastered",
-            quiz: {
-              date: "2026-10-18",
-              score: 98,
-              totalScore: 100,
-              percentage: 98,
-              passed: true,
-              weaknesses: "إتقان ممتاز، مراجعة بسيطة لاستخدامات خامس أكسيد الفاناديوم.",
-              geminiFeedback: "استيعاب رائع لخواص واستخدامات عناصر السلسلة الأولى."
-            }
+            status: "not_started",
+            quiz: null,
+            isStudied: false
           },
           {
             id: "chem-1-2",
@@ -785,16 +771,9 @@ export const initialSubjects = [
             id: "ar-1-1",
             title: "همزتا الوصل والقطع وأل الشمسية والقمرية والتاء المربوطة والمفتوحة",
             description: "الضوابط الإملائية ورسم الهمزة المتوسطة والمتطرفة",
-            status: "mastered",
-            quiz: {
-              date: "2026-10-14",
-              score: 95,
-              totalScore: 100,
-              percentage: 95,
-              passed: true,
-              weaknesses: "مراجعة كتابة الهمزة المتطرفة عند اتصالها بضمير النصب.",
-              geminiFeedback: "اجتياز ممتاز، تم الالتزام بحد الـ 95%."
-            }
+            status: "not_started",
+            quiz: null,
+            isStudied: false
           },
           {
             id: "ar-1-2",

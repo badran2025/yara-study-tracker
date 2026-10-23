@@ -22,7 +22,8 @@ import {
   Home,
   Check,
   ChevronLeft,
-  RotateCcw
+  RotateCcw,
+  Trash2
 } from 'lucide-react';
 
 const iconMap = {
@@ -45,6 +46,7 @@ export default function SubjectView({
   onToggleStudiedLesson,
   onOpenTestModal,
   onOpenSyllabusEditor,
+  onDeleteQuiz,
   onBackToHub,
   onBackToHome
 }) {
@@ -95,11 +97,11 @@ export default function SubjectView({
   activeSubject.units.forEach(u => {
     u.lessons.forEach(l => {
       subjectTotal++;
-      const isStudied = Boolean(l.isStudied ?? (l.status === 'mastered' || l.status === 'current'));
+      const isStudied = l.isStudied === true;
       if (isStudied) subjectStudied++;
       
-      const isMastered = l.status === 'mastered' || (l.quiz && l.quiz.percentage >= 95);
-      const isNeedsRev = l.status === 'needs_review' || (l.quiz && l.quiz.percentage < 95);
+      const isMastered = Boolean(l.quiz && l.quiz.percentage >= 95);
+      const isNeedsRev = Boolean(l.quiz && l.quiz.percentage < 95);
 
       if (isMastered) subjectMastered++;
       if (isNeedsRev) {
@@ -474,9 +476,9 @@ export default function SubjectView({
                 // Filter lessons
                 const filteredLessons = unit.lessons.filter(l => {
                   const isCurrent = l.id === activeSubject.currentLessonId;
-                  const isStudied = Boolean(l.isStudied ?? (l.status === 'mastered' || l.status === 'current'));
-                  const isMastered = l.status === 'mastered' || (l.quiz && l.quiz.percentage >= 95);
-                  const isNeedsRev = l.status === 'needs_review' || (l.quiz && l.quiz.percentage < 95);
+                  const isStudied = l.isStudied === true;
+                  const isMastered = Boolean(l.quiz && l.quiz.percentage >= 95);
+                  const isNeedsRev = Boolean(l.quiz && l.quiz.percentage < 95);
 
                   if (filterStatus === 'current') return isCurrent;
                   if (filterStatus === 'studied') return isStudied;
@@ -526,10 +528,10 @@ export default function SubjectView({
                       <div className="divide-y divide-slate-100 p-2 sm:p-3 space-y-2">
                         {filteredLessons.map((lesson) => {
                           const isCurrent = lesson.id === activeSubject.currentLessonId;
-                          const isStudied = Boolean(lesson.isStudied ?? (lesson.status === 'mastered' || lesson.status === 'current'));
+                          const isStudied = lesson.isStudied === true;
                           const hasQuiz = Boolean(lesson.quiz);
-                          const isMastered = lesson.status === 'mastered' || (hasQuiz && lesson.quiz.percentage >= 95);
-                          const needsReview = lesson.status === 'needs_review' || (hasQuiz && lesson.quiz.percentage < 95);
+                          const isMastered = Boolean(hasQuiz && lesson.quiz.percentage >= 95);
+                          const needsReview = Boolean(hasQuiz && lesson.quiz.percentage < 95);
 
                           return (
                             <div
@@ -664,6 +666,22 @@ export default function SubjectView({
                                     <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
                                     <span>{hasQuiz ? 'تعديل الاختبار' : 'رصد اختبار Gemini'}</span>
                                   </button>
+
+                                  {/* Quick Delete / Cancel Quiz button if quiz exists */}
+                                  {hasQuiz && (
+                                    <button
+                                      onClick={() => {
+                                        if (window.confirm(`هل أنت متأكد من إلغاء نتيجة اختبار درس: "${lesson.title}"؟`)) {
+                                          onDeleteQuiz(activeSubject.id, lesson.id);
+                                          showToast(`تم إلغاء نتيجة اختبار: "${lesson.title}" 🗑️`);
+                                        }
+                                      }}
+                                      className="p-1.5 rounded-xl text-rose-500 hover:text-rose-700 hover:bg-rose-50 border border-rose-200 transition-all shadow-2xs"
+                                      title="إلغاء وحذف نتيجة الاختبار"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                  )}
 
                                 </div>
 

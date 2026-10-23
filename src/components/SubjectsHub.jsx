@@ -102,13 +102,13 @@ export default function SubjectsHub({
           subject.units.forEach(u => {
             u.lessons.forEach(l => {
               subjectTotal++;
-              if (l.isStudied || l.status === 'mastered' || l.status === 'current') {
+              if (l.isStudied === true) {
                 subjectStudied++;
               }
-              if (l.status === 'mastered' || (l.quiz && l.quiz.percentage >= 95)) {
+              if (l.quiz && l.quiz.percentage >= 95) {
                 subjectMastered++;
               }
-              if (l.status === 'needs_review' || (l.quiz && l.quiz.percentage < 95)) {
+              if (l.quiz && l.quiz.percentage < 95) {
                 subjectNeedsReview++;
               }
               if (l.id === subject.currentLessonId) {
