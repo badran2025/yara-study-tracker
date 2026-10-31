@@ -16,7 +16,6 @@ export default function Header({
   setIsAdmin, 
   onGoHome,
   syncStatus = 'synced',
-  onOpenSyncModal,
   onExportData, 
   onImportData, 
   onResetData 
@@ -91,17 +90,6 @@ export default function Header({
             >
               <Home className="w-4 h-4 text-emerald-600" />
               <span className="hidden sm:inline">الرئيسية</span>
-            </button>
-
-            {/* Sync Devices Button - ALWAYS VISIBLE */}
-            <button
-              onClick={onOpenSyncModal}
-              className="px-3.5 py-2 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white rounded-xl text-xs font-black transition-all flex items-center gap-1.5 shadow-sm shadow-emerald-600/20"
-              title="مزامنة التعديلات بين جهاز يارا وجهاز المشرف"
-            >
-              <RefreshCw className="w-3.5 h-3.5 text-yellow-300" />
-              <span className="hidden sm:inline">مزامنة الأجهزة 🔄</span>
-              <span className="sm:hidden">مزامنة 🔄</span>
             </button>
 
             {/* Backup actions */}

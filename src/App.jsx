@@ -8,7 +8,7 @@ import ExamsCenterView from './components/ExamsCenterView';
 import TestModal from './components/TestModal';
 import SyllabusEditorModal from './components/SyllabusEditorModal';
 import ScheduleExamModal from './components/ScheduleExamModal';
-import SyncDevicesModal from './components/SyncDevicesModal';
+import RoleSelectModal from './components/RoleSelectModal';
 import { initialSubjects, initialSchedule } from './data/defaultData';
 import { onSnapshot } from 'firebase/firestore';
 import { TRACKER_DOC_REF, saveStateToCloud } from './services/firebase';
@@ -72,7 +72,25 @@ export default function App() {
   });
 
   const [isScheduleExamModalOpen, setIsScheduleExamModalOpen] = useState(false);
-  const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
+  
+  // Role Selection Modal on opening the site: Choose between Yara Mode 🌸 and Admin Mode 🛡️
+  const [isRoleModalOpen, setIsRoleModalOpen] = useState(() => {
+    try {
+      return !sessionStorage.getItem('yara_tracker_session_role_chosen');
+    } catch {
+      return true;
+    }
+  });
+
+  const handleSelectRole = (role) => {
+    setIsAdmin(role === 'admin');
+    try {
+      sessionStorage.setItem('yara_tracker_session_role_chosen', 'true');
+    } catch (err) {
+      console.error(err);
+    }
+    setIsRoleModalOpen(false);
+  };
 
   // Modals state
   const [testModal, setTestModal] = useState({
@@ -548,7 +566,6 @@ export default function App() {
         setIsAdmin={setIsAdmin}
         syncStatus={syncStatus}
         onGoHome={() => setCurrentScreen('home')}
-        onOpenSyncModal={() => setIsSyncModalOpen(true)}
         onExportData={handleExportData}
         onImportData={handleImportData}
         onResetData={handleResetData}
@@ -661,14 +678,10 @@ export default function App() {
         onUpdateSubject={handleUpdateSubject}
       />
 
-      {/* Sync Across Devices Modal (Yara phone <-> Brother laptop) */}
-      <SyncDevicesModal
-        isOpen={isSyncModalOpen}
-        onClose={() => setIsSyncModalOpen(false)}
-        subjects={subjects}
-        schedule={schedule}
-        scheduledExams={scheduledExams}
-        onApplyImportedData={handleApplyImportedData}
+      {/* Role Selection Modal on Opening Website */}
+      <RoleSelectModal
+        isOpen={isRoleModalOpen}
+        onSelectRole={handleSelectRole}
       />
 
       {/* Footer */}
