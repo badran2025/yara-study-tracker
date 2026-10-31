@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Calculator, 
   Zap, 
@@ -40,6 +40,15 @@ const iconMap = {
   Dna,
   Mountain
 };
+
+const ARABIC_BRANCHES = [
+  { key: 'grammar', name: 'القواعد النحوية (النحو)', shortName: 'النحو', icon: '📝', badgeClass: 'bg-emerald-100 text-emerald-900 border-emerald-300' },
+  { key: 'rhetoric', name: 'البلاغة العربية', shortName: 'البلاغة', icon: '🎨', badgeClass: 'bg-purple-100 text-purple-900 border-purple-300' },
+  { key: 'literature', name: 'الأدب والنصوص', shortName: 'الأدب والنصوص', icon: '📜', badgeClass: 'bg-rose-100 text-rose-900 border-rose-300' },
+  { key: 'reading', name: 'القراءة', shortName: 'القراءة', icon: '📖', badgeClass: 'bg-blue-100 text-blue-900 border-blue-300' },
+  { key: 'writing', name: 'مجال الكتابة والتعبير', shortName: 'التعبير', icon: '✍️', badgeClass: 'bg-teal-100 text-teal-900 border-teal-300' },
+  { key: 'story', name: 'كتاب الأيام (القصة)', shortName: 'القصة', icon: '📚', badgeClass: 'bg-amber-100 text-amber-900 border-amber-300' },
+];
 
 export default function SubjectView({
   subjects,
@@ -167,6 +176,82 @@ export default function SubjectView({
       });
     }
   });
+
+  // Arabic 6 Branches Stats & Independent Stopping Points
+  const arabicBranchCounts = useMemo(() => {
+    if (activeSubject.id !== 'arabic') return {};
+    const counts = {};
+    ARABIC_BRANCHES.forEach(b => {
+      counts[b.key] = { total: 0, studied: 0, unitsCount: 0 };
+    });
+    activeSubject.units.forEach(u => {
+      if (counts[u.branch]) {
+        counts[u.branch].unitsCount++;
+        u.lessons.forEach(l => {
+          counts[u.branch].total++;
+          if (l.isStudied) counts[u.branch].studied++;
+        });
+      }
+    });
+    return counts;
+  }, [activeSubject]);
+
+  const arabicStoppingPoints = useMemo(() => {
+    if (activeSubject.id !== 'arabic') return [];
+    return ARABIC_BRANCHES.map(b => {
+      let curLesson = null;
+      let curUnit = null;
+
+      // 1. Check currentLessonByBranch
+      const branchLessonId = activeSubject.currentLessonByBranch?.[b.key];
+      if (branchLessonId) {
+        for (const u of activeSubject.units) {
+          if (u.branch === b.key) {
+            const found = u.lessons.find(l => l.id === branchLessonId);
+            if (found) {
+              curLesson = found;
+              curUnit = u;
+              break;
+            }
+          }
+        }
+      }
+
+      // 2. Fallback to unit.currentLessonId or lesson.status === 'current'
+      if (!curLesson) {
+        for (const u of activeSubject.units) {
+          if (u.branch === b.key) {
+            const found = u.lessons.find(l => 
+              (u.currentLessonId && l.id === u.currentLessonId) ||
+              (activeSubject.currentLessonIdsByUnit && activeSubject.currentLessonIdsByUnit[u.id] === l.id) ||
+              (l.status === 'current')
+            );
+            if (found) {
+              curLesson = found;
+              curUnit = u;
+              break;
+            }
+          }
+        }
+      }
+
+      // 3. Fallback to the first lesson of this branch if not started
+      if (!curLesson) {
+        const firstUnit = activeSubject.units.find(u => u.branch === b.key);
+        if (firstUnit && firstUnit.lessons[0]) {
+          curLesson = firstUnit.lessons[0];
+          curUnit = firstUnit;
+        }
+      }
+
+      return {
+        branch: b.key,
+        branchConfig: b,
+        unit: curUnit,
+        lesson: curLesson
+      };
+    });
+  }, [activeSubject]);
 
   const subjectPercent = subjectTotal > 0 
     ? Math.round((subjectStudied / subjectTotal) * 100) 
@@ -416,31 +501,73 @@ export default function SubjectView({
           </div>
 
           {/* ACTIVE STOPPING POINTS DISPLAY (أين تقف يارا في كل قسم/فرع) */}
-          <div className="mt-3.5 pt-3 border-t border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-            <div className="flex items-center gap-2 text-xs font-black text-slate-800">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-              <span>📍 أين تقف يارا الآن (نقاط التوقف):</span>
+          <div className="mt-3.5 pt-3 border-t border-slate-200/80 space-y-2.5">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 text-xs font-black text-slate-800">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                <span>📍 نقاط التوقف الحالية (أين وصلت يارا في كل فرع مستقل):</span>
+              </div>
+              <span className="text-[11px] text-slate-400 font-semibold hidden sm:inline">
+                اضغطي على أي بطاقة فرع للانتقال إليه مباشرة
+              </span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              {activeStoppingPoints.length > 0 ? (
-                activeStoppingPoints.map((pt, idx) => (
-                  <div 
-                    key={idx}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-emerald-300 shadow-2xs text-xs"
-                  >
-                    <span className="font-bold text-slate-500 text-[11px]">
-                      {pt.branch === 'story' ? '📖 القصة:' : pt.branch === 'grammar' ? '✍️ النحو:' : pt.branch === 'reading_literature' ? '📚 القراءة والأدب:' : `${pt.unitTitle.slice(0, 15)}...:`}
-                    </span>
-                    <strong className="font-black text-emerald-800">{pt.lessonTitle}</strong>
-                  </div>
-                ))
-              ) : (
-                <span className="text-xs text-slate-500 font-semibold bg-white px-3 py-1 rounded-xl border border-slate-200">
-                  لم يتم تحديد مكان توقف بعد — اضغطي "وصلت هنا اليوم 📍" عند أي درس
-                </span>
-              )}
-            </div>
+            {activeSubject.id === 'arabic' ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                {arabicStoppingPoints.map(b => {
+                  const bCounts = arabicBranchCounts[b.branch] || { studied: 0, total: 0 };
+                  const isSelected = selectedBranch === b.branch;
+
+                  return (
+                    <button
+                      key={b.branch}
+                      onClick={() => {
+                        setSelectedBranch(b.branch);
+                        setSubjectTab('syllabus');
+                      }}
+                      className={`p-2.5 rounded-xl border text-right transition-all flex flex-col justify-between ${
+                        isSelected
+                          ? 'bg-amber-100/90 border-amber-400 ring-2 ring-amber-400/20 shadow-xs'
+                          : 'bg-white border-slate-200 hover:border-amber-300 hover:bg-amber-50/40'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-1 text-[11px] font-black">
+                        <span className="flex items-center gap-1">
+                          <span>{b.branchConfig.icon}</span>
+                          <span className="text-slate-800">{b.branchConfig.shortName}</span>
+                        </span>
+                        <span className="text-[10px] text-amber-800 bg-amber-50 px-1.5 py-0.2 rounded-md font-bold border border-amber-200">
+                          {bCounts.studied}/{bCounts.total}
+                        </span>
+                      </div>
+                      <div className="mt-1.5 text-xs font-black text-emerald-800 truncate line-clamp-1" title={b.lesson?.title}>
+                        📍 {b.lesson?.title || 'لم يُحدد بعد'}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex flex-wrap items-center gap-2">
+                {activeStoppingPoints.length > 0 ? (
+                  activeStoppingPoints.map((pt, idx) => (
+                    <div 
+                      key={idx}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-emerald-300 shadow-2xs text-xs"
+                    >
+                      <span className="font-bold text-slate-500 text-[11px]">
+                        {`${pt.unitTitle.slice(0, 18)}...:`}
+                      </span>
+                      <strong className="font-black text-emerald-800">{pt.lessonTitle}</strong>
+                    </div>
+                  ))
+                ) : (
+                  <span className="text-xs text-slate-500 font-semibold bg-white px-3 py-1 rounded-xl border border-slate-200">
+                    لم يتم تحديد مكان توقف بعد — اضغطي "وصلت هنا اليوم 📍" عند أي درس
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -481,58 +608,55 @@ export default function SubjectView({
         {/* TAB 1: SYLLABUS & LESSONS */}
         {subjectTab === 'syllabus' && (
           <div>
-            {/* Branch Filter Bar for Arabic Subject */}
+            {/* Branch Filter Bar for Arabic Subject (6 Official Branches) */}
             {activeSubject.id === 'arabic' && (
-              <div className="px-5 py-3 bg-amber-50/80 border-b border-amber-200/80 flex flex-wrap items-center justify-between gap-2.5">
-                <div className="flex flex-wrap items-center gap-1.5 text-xs">
-                  <span className="font-black text-amber-950 ml-1">فروع اللغة العربية:</span>
+              <div className="px-5 py-3.5 bg-amber-50/90 border-b border-amber-200 flex flex-col gap-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="font-black text-amber-950 text-xs flex items-center gap-1.5">
+                    <span>📚 فروع مادة اللغة العربية الستة:</span>
+                    <span className="text-[11px] font-semibold text-amber-800">(كل فرع له فهرسه ونقطة توقفه المستقلة)</span>
+                  </span>
+                  <div className="text-[11px] font-bold text-amber-800">
+                    منهج اللغة العربية مكتمل ومطابق لكتاب الأضواء ({subjectTotal} درساً وموضوعاً) 🎓✨
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 text-xs">
                   <button
                     onClick={() => setSelectedBranch('all')}
-                    className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
+                    className={`px-3 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
                       selectedBranch === 'all'
                         ? 'bg-amber-600 text-white shadow-sm'
                         : 'bg-white text-slate-700 hover:bg-amber-100 border border-amber-200'
                     }`}
                   >
-                    جميع الفروع
+                    <span>🌟 جميع الفروع ({subjectTotal})</span>
                   </button>
-                  <button
-                    onClick={() => setSelectedBranch('story')}
-                    className={`px-3 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
-                      selectedBranch === 'story'
-                        ? 'bg-amber-600 text-white shadow-sm'
-                        : 'bg-white text-slate-700 hover:bg-amber-100 border border-amber-200'
-                    }`}
-                  >
-                    <span>📖 قصة الأيام (طه حسين)</span>
-                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 font-bold">26 فصلاً ودرساً</span>
-                  </button>
-                  <button
-                    onClick={() => setSelectedBranch('grammar')}
-                    className={`px-3 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
-                      selectedBranch === 'grammar'
-                        ? 'bg-amber-600 text-white shadow-sm'
-                        : 'bg-white text-slate-700 hover:bg-amber-100 border border-amber-200'
-                    }`}
-                  >
-                    <span>📝 كتاب النحو</span>
-                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 font-bold">12 وحدة - 60 درساً</span>
-                  </button>
-                  <button
-                    onClick={() => setSelectedBranch('other')}
-                    className={`px-3 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
-                      selectedBranch === 'other'
-                        ? 'bg-amber-600 text-white shadow-sm'
-                        : 'bg-white text-slate-700 hover:bg-amber-100 border border-amber-200'
-                    }`}
-                  >
-                    <span>📚 الكتاب الثالث (قراءة، نصوص، بلاغة، تدريبات)</span>
-                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 font-bold">24 درساً</span>
-                  </button>
-                </div>
 
-                <div className="text-[11px] font-bold text-amber-800">
-                  منهج اللغة العربية مكتمل 100% بكافة كتبه الثلاثة (110 دروس) 🎓✨
+                  {ARABIC_BRANCHES.map(b => {
+                    const bCount = arabicBranchCounts[b.key]?.total || 0;
+                    const bStudied = arabicBranchCounts[b.key]?.studied || 0;
+                    const isSel = selectedBranch === b.key;
+
+                    return (
+                      <button
+                        key={b.key}
+                        onClick={() => setSelectedBranch(b.key)}
+                        className={`px-3 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 ${
+                          isSel
+                            ? 'bg-amber-600 text-white shadow-sm'
+                            : 'bg-white text-slate-700 hover:bg-amber-100 border border-amber-200'
+                        }`}
+                      >
+                        <span>{b.icon} {b.shortName}</span>
+                        <span className={`text-[10px] px-1.5 py-0.2 rounded-md font-bold ${
+                          isSel ? 'bg-black/20 text-white' : 'bg-amber-50 text-amber-900 border border-amber-200'
+                        }`}>
+                          {bStudied}/{bCount}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -677,19 +801,34 @@ export default function SubjectView({
                           <h3 className="font-extrabold text-slate-800 text-sm sm:text-base">
                             {unit.title}
                           </h3>
-                          {unit.branch === 'story' && (
-                            <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300">
-                              القصة
-                            </span>
-                          )}
                           {unit.branch === 'grammar' && (
                             <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-300">
-                              النحو
+                              📝 النحو
                             </span>
                           )}
-                          {unit.branch === 'other' && (
+                          {unit.branch === 'rhetoric' && (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-purple-100 text-purple-900 border border-purple-300">
+                              🎨 البلاغة
+                            </span>
+                          )}
+                          {unit.branch === 'literature' && (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-rose-100 text-rose-900 border border-rose-300">
+                              📜 الأدب والنصوص
+                            </span>
+                          )}
+                          {unit.branch === 'reading' && (
                             <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-blue-100 text-blue-900 border border-blue-300">
-                              باقي الفروع
+                              📖 القراءة
+                            </span>
+                          )}
+                          {unit.branch === 'writing' && (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-teal-100 text-teal-900 border border-teal-300">
+                              ✍️ التعبير والكتابة
+                            </span>
+                          )}
+                          {unit.branch === 'story' && (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300">
+                              📚 كتاب الأيام
                             </span>
                           )}
                         </div>

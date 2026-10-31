@@ -151,6 +151,20 @@ export default function App() {
             // Smart Merge for Subjects: ensure local studied lessons aren't lost if cloud had none
             if (cloudData.subjects && Array.isArray(cloudData.subjects)) {
               setSubjects(prevLocal => {
+                // Check if cloud Arabic curriculum needs update to the new 6-branch structure
+                const defaultArabic = defaultSubjects.find(s => s.id === 'arabic');
+                const cloudArabic = cloudData.subjects.find(s => s.id === 'arabic');
+                const isCloudArabicOutdated = !cloudArabic || !cloudArabic.units || !cloudArabic.units.some(u => u.id === 'unit-ar-gram-basics');
+
+                if (isCloudArabicOutdated && defaultArabic) {
+                  const updatedWithNewArabic = cloudData.subjects.map(s => {
+                    if (s.id !== 'arabic') return s;
+                    return defaultArabic;
+                  });
+                  saveStateToCloud(updatedWithNewArabic, cloudData.schedule || schedule, cloudData.scheduledExams || scheduledExams).catch(() => {});
+                  return updatedWithNewArabic;
+                }
+
                 let localStudied = 0;
                 prevLocal.forEach(s => s.units.forEach(u => u.lessons.forEach(l => { if (l.isStudied) localStudied++; })));
 
@@ -290,20 +304,29 @@ export default function App() {
       if (sub.id !== subjectId) return sub;
 
       // Find unit containing this lesson if unitId not explicitly provided
-      let targetUnitId = unitId;
-      if (!targetUnitId) {
-        const foundUnit = sub.units.find(u => u.lessons.some(l => l.id === lessonId));
-        if (foundUnit) targetUnitId = foundUnit.id;
+      let targetUnit = null;
+      if (unitId) {
+        targetUnit = sub.units.find(u => u.id === unitId);
       }
+      if (!targetUnit) {
+        targetUnit = sub.units.find(u => u.lessons.some(l => l.id === lessonId));
+      }
+      const targetUnitId = targetUnit ? targetUnit.id : unitId;
+      const targetBranch = targetUnit ? targetUnit.branch : null;
 
       const currentLessonIdsByUnit = {
         ...(sub.currentLessonIdsByUnit || {}),
         ...(targetUnitId ? { [targetUnitId]: lessonId } : {})
       };
 
+      const currentLessonByBranch = {
+        ...(sub.currentLessonByBranch || {}),
+        ...(targetBranch ? { [targetBranch]: lessonId } : {})
+      };
+
       const updatedUnits = sub.units.map(unit => {
         // Only reset current status within the SAME unit!
-        // Other units (e.g. story vs grammar vs reading) preserve their own stopping point!
+        // Other units and other branches (e.g. story vs grammar vs reading) preserve their own stopping point!
         if (targetUnitId && unit.id !== targetUnitId) {
           return unit;
         }
@@ -333,6 +356,7 @@ export default function App() {
         ...sub,
         currentLessonId: lessonId,
         currentLessonIdsByUnit,
+        currentLessonByBranch,
         units: updatedUnits
       };
     }));
