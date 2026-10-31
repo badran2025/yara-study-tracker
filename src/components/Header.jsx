@@ -73,13 +73,13 @@ export default function Header({
             )}
             {syncStatus === 'pending_setup' && (
               <a 
-                href="https://console.firebase.google.com/project/yara-study-tracker/firestore"
+                href="https://console.firebase.google.com/project/yara-study-tracker/firestore/rules"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-black hover:bg-amber-200 transition-colors"
-                title="اضغط هنا لتفعيل Cloud Firestore في حساب فايربيز بضغطة زر واحدة"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-black hover:bg-amber-200 transition-colors shadow-2xs"
+                title="اضغط هنا لفتح صفحة القواعد (Rules) وتفعيل السماح بالقراءة والكتابة"
               >
-                <span>تفعيل Firestore بالسحابة ⚠️</span>
+                <span>تفعيل قواعد Firestore ⚠️</span>
               </a>
             )}
 
