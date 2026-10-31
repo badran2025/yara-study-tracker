@@ -116,13 +116,13 @@ export default function HomePortal({
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       
-      {/* Motivational & Welcome Banner */}
+      {/* Motivational & Welcome Banner with Famous Scientists & Philosophers Quotes */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white p-6 sm:p-8 shadow-xl shadow-emerald-700/10">
         <div className="absolute -left-12 -bottom-12 w-56 h-56 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
         <div className="absolute right-10 -top-10 w-40 h-40 rounded-full bg-emerald-400/20 blur-2xl pointer-events-none"></div>
 
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-3 text-center md:text-right">
+          <div className="space-y-3 text-center md:text-right flex-1">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 text-emerald-100 text-xs font-black backdrop-blur-md border border-white/10">
               <Sparkles className="w-4 h-4 text-yellow-300" />
               <span>مرحباً بكِ يا يارا 🌸 | عام التميز وتحقيق الأحلام</span>
@@ -132,9 +132,20 @@ export default function HomePortal({
               خطوة كل يوم تصنع <span className="text-yellow-300">تفوق الغد</span> بإذن الله
             </h2>
             
-            <p className="text-sm sm:text-base text-emerald-50 max-w-2xl font-medium leading-relaxed">
-              {motivationalQuotes[quoteIndex]}
-            </p>
+            {/* Scientist / Philosopher Quote */}
+            <div className="pt-1 space-y-2">
+              <p className="text-sm sm:text-base lg:text-lg text-emerald-50 max-w-2xl font-bold leading-relaxed">
+                <span className="text-yellow-300 text-xl font-serif">« </span>
+                <span>{motivationalQuotes[quoteIndex]?.quote || motivationalQuotes[quoteIndex]}</span>
+                <span className="text-yellow-300 text-xl font-serif"> »</span>
+              </p>
+              {motivationalQuotes[quoteIndex]?.author && (
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/25 text-yellow-300 text-xs font-black border border-white/15 backdrop-blur-xs">
+                  <span>— {motivationalQuotes[quoteIndex].author}</span>
+                  <span className="text-emerald-200 text-[10px] font-semibold">({motivationalQuotes[quoteIndex].category})</span>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Quick Progress Dial */}
@@ -176,6 +187,89 @@ export default function HomePortal({
         </div>
       </div>
 
+      {/* 🚨 UNMISSABLE URGENT UPCOMING EXAM ALERT HERO BANNER (لو في امتحان يظهر فورا بأعلى الصفحة بشكل مستحيل يفوت يارا!) */}
+      {upcomingExam && (
+        <div className="relative overflow-hidden bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-7 text-white shadow-2xl border-3 border-rose-500 ring-4 ring-rose-500/20 animate-in fade-in duration-300">
+          <div className="absolute right-0 top-0 w-80 h-80 bg-rose-500/15 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute left-10 bottom-0 w-60 h-60 bg-yellow-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            
+            {/* Exam Details */}
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="text-xs sm:text-sm font-black px-4 py-1.5 rounded-full bg-rose-600 text-white shadow-md shadow-rose-600/40 animate-pulse flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
+                  <Hourglass className="w-4 h-4" />
+                  <span>تنبيه هام يا يارا: {countdown?.text || 'موعد اختبار قادم!'}</span>
+                </span>
+                <span className="text-xs font-black px-3.5 py-1.5 rounded-xl bg-white/15 text-emerald-300 border border-white/20">
+                  {upcomingExam.subjectName}
+                </span>
+                <span className="text-xs font-black px-3.5 py-1.5 rounded-xl bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
+                  {upcomingExam.targetType === 'unit' ? '🏆 اختبار شامل للفصل' : '📝 اختبار درس'}
+                </span>
+              </div>
+
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-wide">
+                {upcomingExam.targetTitle}
+              </h3>
+
+              {/* High Contrast Date & Time Badges */}
+              <div className="flex flex-wrap items-center gap-3 pt-1">
+                <div className="bg-white text-slate-900 font-black text-sm sm:text-base px-4 py-2 rounded-xl shadow-md border-2 border-slate-200 flex items-center gap-2.5">
+                  <Calendar className="w-5 h-5 text-blue-600" />
+                  <span>تاريخ الاختبار: <strong className="font-black text-slate-950 underline underline-offset-4 decoration-blue-500">{upcomingExam.scheduledDate}</strong></span>
+                </div>
+
+                {upcomingExam.scheduledTime && (
+                  <div className="bg-amber-400 text-slate-950 font-black text-sm sm:text-base px-4 py-2 rounded-xl shadow-md border-2 border-amber-300 flex items-center gap-2.5">
+                    <Clock className="w-5 h-5 text-slate-950" />
+                    <span>الساعة: <strong className="font-black text-slate-950">{upcomingExam.scheduledTime}</strong></span>
+                  </div>
+                )}
+
+                {upcomingExam.notes && (
+                  <div className="bg-slate-800/90 text-yellow-200 font-bold text-xs sm:text-sm px-3.5 py-2 rounded-xl border border-yellow-400/30 flex items-center gap-2">
+                    <span>📌 {upcomingExam.notes}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3 self-start lg:self-auto shrink-0 pt-2 lg:pt-0">
+              <button
+                onClick={() => {
+                  const sub = subjects.find(s => s.id === upcomingExam.subjectId);
+                  if (sub) {
+                    onOpenTestModal(sub, {
+                      id: upcomingExam.targetId,
+                      title: upcomingExam.targetTitle,
+                      quiz: null,
+                      type: upcomingExam.targetType
+                    });
+                  }
+                }}
+                className="px-6 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-sm sm:text-base rounded-2xl shadow-xl shadow-emerald-600/40 flex items-center gap-2.5 transition-all hover:scale-105"
+              >
+                <Award className="w-5 h-5 text-yellow-300" />
+                <span>بدء / تسجيل النتيجة ✍️</span>
+              </button>
+
+              <button
+                onClick={onNavigateToExams}
+                className="px-5 py-3.5 bg-white/10 hover:bg-white/20 text-white font-black text-xs sm:text-sm rounded-2xl transition-all border border-white/20 flex items-center gap-1.5"
+              >
+                <span>فتح مركز الاختبارات 🎯</span>
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
       {/* Main Three Navigation Portals (المواد الدراسية | الدروس الخصوصية | مركز الاختبارات) */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
@@ -213,23 +307,23 @@ export default function HomePortal({
                   📚 المواد الدراسية
                 </h4>
                 <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1.5 leading-relaxed">
-                  فهرس الفصول والدروس، مكان التوقف الحالي، وتحديد ما تمت دراسته ومراجعته.
+                  فهرس الفصول والدروس، متابعة ما تم إنجازه، وتحديد مكان التوقف لكل مادة وفرع.
                 </p>
               </div>
 
               {/* 3 Metric Pills */}
               <div className="grid grid-cols-3 gap-2 pt-2 text-center text-xs">
-                <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                  <div className="text-slate-400 font-bold text-[11px]">المدروس</div>
-                  <div className="text-slate-800 font-black text-base mt-0.5">{studiedLessons}</div>
+                <div className="bg-slate-50 p-2.5 rounded-2xl border border-slate-200">
+                  <div className="text-slate-500 font-bold text-[11px]">المدروس</div>
+                  <div className="text-slate-800 font-black text-lg mt-0.5">{studiedLessons}</div>
                 </div>
-                <div className="bg-teal-50 p-2 rounded-xl border border-teal-100">
+                <div className="bg-teal-50 p-2.5 rounded-2xl border border-teal-200">
                   <div className="text-teal-700 font-bold text-[11px]">متقن (95%+)</div>
-                  <div className="text-teal-800 font-black text-base mt-0.5">{masteredLessons}</div>
+                  <div className="text-teal-800 font-black text-lg mt-0.5">{masteredLessons}</div>
                 </div>
-                <div className="bg-amber-50 p-2 rounded-xl border border-amber-100">
+                <div className="bg-amber-50 p-2.5 rounded-2xl border border-amber-200">
                   <div className="text-amber-700 font-bold text-[11px]">مراجعة</div>
-                  <div className="text-amber-800 font-black text-base mt-0.5">{needsReviewLessons}</div>
+                  <div className="text-amber-800 font-black text-lg mt-0.5">{needsReviewLessons}</div>
                 </div>
               </div>
             </div>
@@ -322,10 +416,14 @@ export default function HomePortal({
             </div>
           </div>
 
-          {/* Card 3: مركز الاختبارات (DEDICATED PORTAL) */}
+          {/* Card 3: مركز الاختبارات (DEDICATED PORTAL WITH EYE-CATCHING HIGHLIGHT) */}
           <div 
             onClick={onNavigateToExams}
-            className="group relative bg-white rounded-3xl p-6 sm:p-7 border-2 border-slate-200 hover:border-amber-500 shadow-md hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between"
+            className={`group relative bg-white rounded-3xl p-6 sm:p-7 border-2 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between ${
+              upcomingExam 
+                ? 'border-amber-400 hover:border-amber-500 shadow-lg shadow-amber-500/10 ring-2 ring-amber-400/20' 
+                : 'border-slate-200 hover:border-amber-500 shadow-md hover:shadow-2xl hover:shadow-amber-500/10'
+            }`}
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-50 rounded-bl-full -z-0 transition-transform group-hover:scale-125 duration-300"></div>
 
@@ -334,9 +432,16 @@ export default function HomePortal({
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 via-yellow-500 to-amber-600 text-white flex items-center justify-center shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform">
                   <Award className="w-7 h-7" />
                 </div>
-                <span className="px-3.5 py-1.5 rounded-full text-xs font-black bg-amber-100 text-amber-900 border border-amber-300">
-                  {audit.totalPending} بانتظار الاختبار
-                </span>
+                {upcomingExam ? (
+                  <span className="px-3.5 py-1.5 rounded-full text-xs font-black bg-rose-600 text-white shadow-sm animate-pulse flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                    <span>اختبار قادم ⏳</span>
+                  </span>
+                ) : (
+                  <span className="px-3.5 py-1.5 rounded-full text-xs font-black bg-amber-100 text-amber-900 border border-amber-300">
+                    {audit.totalPending} بانتظار الاختبار
+                  </span>
+                )}
               </div>
 
               <div>
@@ -344,7 +449,7 @@ export default function HomePortal({
                   🎯 مركز الاختبارات
                 </h4>
                 <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1.5 leading-relaxed">
-                  العد التنازلي للاختبار، مراية التدقيق، وتسجيل نتائج الدروس والفصول الشاملة.
+                  مراية المتابعة المصنفة حسب المواد، والعد التنازلي للاختبارات الشاملة والدروس.
                 </p>
               </div>
 

@@ -96,9 +96,9 @@ export default function SubjectView({
     setIsTeacherModalOpen(false);
   };
 
-  const handleSetCurrentWithToast = (subjectId, lessonId, lessonTitle) => {
-    onSetCurrentLesson(subjectId, lessonId);
-    showToast(`تم تحديث مكان توقفك بنجاح إلى: "${lessonTitle}" 📍✨`);
+  const handleSetCurrentWithToast = (subjectId, lessonId, lessonTitle, unitId) => {
+    onSetCurrentLesson(subjectId, lessonId, unitId);
+    showToast(`تم تحديث مكان توقفك بنجاح في هذا القسم إلى: "${lessonTitle}" 📍✨`);
   };
 
   const handleToggleStudiedWithToast = (subjectId, lessonId, lessonTitle, willBeStudied) => {
@@ -147,6 +147,25 @@ export default function SubjectView({
         currentLessonTitle = l.title;
       }
     });
+  });
+
+  // Calculate active stopping points across branches / units
+  const activeStoppingPoints = [];
+  activeSubject.units.forEach(u => {
+    const curLesson = u.lessons.find(l => 
+      (u.currentLessonId && l.id === u.currentLessonId) ||
+      (activeSubject.currentLessonIdsByUnit && activeSubject.currentLessonIdsByUnit[u.id] === l.id) ||
+      (l.status === 'current')
+    );
+    if (curLesson) {
+      activeStoppingPoints.push({
+        unitId: u.id,
+        unitTitle: u.title,
+        branch: u.branch,
+        lessonId: curLesson.id,
+        lessonTitle: curLesson.title
+      });
+    }
   });
 
   const subjectPercent = subjectTotal > 0 
@@ -395,6 +414,34 @@ export default function SubjectView({
             </div>
 
           </div>
+
+          {/* ACTIVE STOPPING POINTS DISPLAY (أين تقف يارا في كل قسم/فرع) */}
+          <div className="mt-3.5 pt-3 border-t border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2 text-xs font-black text-slate-800">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+              <span>📍 أين تقف يارا الآن (نقاط التوقف):</span>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {activeStoppingPoints.length > 0 ? (
+                activeStoppingPoints.map((pt, idx) => (
+                  <div 
+                    key={idx}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-emerald-300 shadow-2xs text-xs"
+                  >
+                    <span className="font-bold text-slate-500 text-[11px]">
+                      {pt.branch === 'story' ? '📖 القصة:' : pt.branch === 'grammar' ? '✍️ النحو:' : pt.branch === 'reading_literature' ? '📚 القراءة والأدب:' : `${pt.unitTitle.slice(0, 15)}...:`}
+                    </span>
+                    <strong className="font-black text-emerald-800">{pt.lessonTitle}</strong>
+                  </div>
+                ))
+              ) : (
+                <span className="text-xs text-slate-500 font-semibold bg-white px-3 py-1 rounded-xl border border-slate-200">
+                  لم يتم تحديد مكان توقف بعد — اضغطي "وصلت هنا اليوم 📍" عند أي درس
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Sub Tabs: فهرس المادة vs مراجعات المادة */}
@@ -585,8 +632,17 @@ export default function SubjectView({
                 }
                 
                 // Filter lessons
+                const unitCurrentLesson = unit.lessons.find(l => 
+                  (unit.currentLessonId && l.id === unit.currentLessonId) ||
+                  (activeSubject.currentLessonIdsByUnit && activeSubject.currentLessonIdsByUnit[unit.id] === l.id) ||
+                  (l.status === 'current')
+                );
+
                 const filteredLessons = unit.lessons.filter(l => {
-                  const isCurrent = l.id === activeSubject.currentLessonId;
+                  const isCurrent = (unit.currentLessonId && l.id === unit.currentLessonId) ||
+                    (activeSubject.currentLessonIdsByUnit && activeSubject.currentLessonIdsByUnit[unit.id] === l.id) ||
+                    (l.status === 'current') ||
+                    (!unit.currentLessonId && l.id === activeSubject.currentLessonId);
                   const isStudied = l.isStudied === true;
                   const isMastered = Boolean(l.quiz && l.quiz.percentage >= 95);
                   const isNeedsRev = Boolean(l.quiz && l.quiz.percentage < 95);
@@ -641,6 +697,14 @@ export default function SubjectView({
 
                       {/* Unit Badges: Study Progress, Mastery Score, Comprehensive Unit Exam */}
                       <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
+                        {/* Unit Current Lesson Badge */}
+                        {unitCurrentLesson && (
+                          <span className="text-[11px] font-black px-2.5 py-1 rounded-lg bg-emerald-600 text-white shadow-xs flex items-center gap-1.5 animate-pulse">
+                            <span className="w-1.5 h-1.5 rounded-full bg-yellow-300"></span>
+                            <span>📍 متوقفة هنا: {unitCurrentLesson.title}</span>
+                          </span>
+                        )}
+
                         {/* Study Progress Badge */}
                         <span className="text-[11px] font-black px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">
                           دراسة {unitMetrics.studiedLessons}/{unitMetrics.totalLessons} ({unitMetrics.studyPercentage}%)
@@ -708,7 +772,10 @@ export default function SubjectView({
                     {!isCollapsed && (
                       <div className="divide-y divide-slate-100 p-2 sm:p-3 space-y-2">
                         {filteredLessons.map((lesson) => {
-                          const isCurrent = lesson.id === activeSubject.currentLessonId;
+                          const isCurrent = (unit.currentLessonId && lesson.id === unit.currentLessonId) ||
+                            (activeSubject.currentLessonIdsByUnit && activeSubject.currentLessonIdsByUnit[unit.id] === lesson.id) ||
+                            (lesson.status === 'current') ||
+                            (!unit.currentLessonId && lesson.id === activeSubject.currentLessonId);
                           const isStudied = lesson.isStudied === true;
                           const hasQuiz = Boolean(lesson.quiz);
                           const isMastered = Boolean(hasQuiz && lesson.quiz.percentage >= 95);
@@ -827,9 +894,9 @@ export default function SubjectView({
                                   {/* 2. Set as Current Lesson (Available in BOTH Yara and Admin modes) */}
                                   {!isCurrent && (
                                     <button
-                                      onClick={() => handleSetCurrentWithToast(activeSubject.id, lesson.id, lesson.title)}
+                                      onClick={() => handleSetCurrentWithToast(activeSubject.id, lesson.id, lesson.title, unit.id)}
                                       className="px-3 py-1.5 rounded-xl text-xs font-black bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 border border-slate-200 transition-all flex items-center gap-1 shadow-2xs"
-                                      title="تحديد هذا الدرس كعلامة للدرس المتوقفين عنده حالياً"
+                                      title="تحديد هذا الدرس كعلامة للدرس المتوقفين عنده حالياً في هذا القسم"
                                     >
                                       <span>وصلت هنا اليوم 📍</span>
                                     </button>

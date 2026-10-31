@@ -284,33 +284,55 @@ export default function App() {
     });
   };
 
-  // Handler: Set current lesson (where they stopped)
-  const handleSetCurrentLesson = (subjectId, lessonId) => {
+  // Handler: Set current lesson (where they stopped) - Supports independent stopping point per unit / branch
+  const handleSetCurrentLesson = (subjectId, lessonId, unitId) => {
     setSubjects(prev => prev.map(sub => {
       if (sub.id !== subjectId) return sub;
 
-      const updatedUnits = sub.units.map(unit => ({
-        ...unit,
-        lessons: unit.lessons.map(lesson => {
-          if (lesson.id === lessonId) {
-            return {
-              ...lesson,
-              status: lesson.quiz 
-                ? (lesson.quiz.percentage >= 95 ? 'mastered' : 'needs_review')
-                : 'current'
-            };
-          }
-          // If was 'current' and not tested, set back to not_started
-          if (lesson.status === 'current' && !lesson.quiz) {
-            return { ...lesson, status: 'not_started' };
-          }
-          return lesson;
-        })
-      }));
+      // Find unit containing this lesson if unitId not explicitly provided
+      let targetUnitId = unitId;
+      if (!targetUnitId) {
+        const foundUnit = sub.units.find(u => u.lessons.some(l => l.id === lessonId));
+        if (foundUnit) targetUnitId = foundUnit.id;
+      }
+
+      const currentLessonIdsByUnit = {
+        ...(sub.currentLessonIdsByUnit || {}),
+        ...(targetUnitId ? { [targetUnitId]: lessonId } : {})
+      };
+
+      const updatedUnits = sub.units.map(unit => {
+        // Only reset current status within the SAME unit!
+        // Other units (e.g. story vs grammar vs reading) preserve their own stopping point!
+        if (targetUnitId && unit.id !== targetUnitId) {
+          return unit;
+        }
+
+        return {
+          ...unit,
+          currentLessonId: lessonId,
+          lessons: unit.lessons.map(lesson => {
+            if (lesson.id === lessonId) {
+              return {
+                ...lesson,
+                status: lesson.quiz 
+                  ? (lesson.quiz.percentage >= 95 ? 'mastered' : 'needs_review')
+                  : 'current'
+              };
+            }
+            // If was 'current' and not tested, set back to not_started within this unit only
+            if (lesson.status === 'current' && !lesson.quiz) {
+              return { ...lesson, status: 'not_started' };
+            }
+            return lesson;
+          })
+        };
+      });
 
       return {
         ...sub,
         currentLessonId: lessonId,
+        currentLessonIdsByUnit,
         units: updatedUnits
       };
     }));
