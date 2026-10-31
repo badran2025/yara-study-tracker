@@ -175,32 +175,32 @@ export default function HomePortal({
         </div>
       </div>
 
-      {/* Main Two Navigation Portals (المواد الدراسية vs الدروس الخصوصية) */}
+      {/* Main Three Navigation Portals (المواد الدراسية | الدروس الخصوصية | مركز الاختبارات) */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-xl sm:text-2xl font-black text-slate-800">
-              بوابات المتابعة الرئيسية 🚀
+              بوابات المتابعة الرئيسية الثلاث 🚀
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
-              اختاري وجهتكِ لمتابعة المناهج الدراسية أو جدول الحصص الأسبوعية
+            <p className="text-xs sm:text-sm text-slate-500 font-semibold mt-0.5">
+              المناهج الدراسية، جدول الحصص الأسبوعية، ومركز الاختبارات والتقييمات
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* Card 1: المواد الدراسية */}
           <div 
             onClick={onNavigateToSubjects}
-            className="group relative bg-white rounded-3xl p-6 sm:p-8 border-2 border-slate-200 hover:border-emerald-500 shadow-md hover:shadow-2xl hover:shadow-emerald-600/10 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between"
+            className="group relative bg-white rounded-3xl p-6 sm:p-7 border-2 border-slate-200 hover:border-emerald-500 shadow-md hover:shadow-2xl hover:shadow-emerald-600/10 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full -z-0 transition-transform group-hover:scale-125 duration-300"></div>
 
             <div className="relative z-10 space-y-4">
               <div className="flex items-center justify-between">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/30 group-hover:scale-110 transition-transform">
-                  <BookOpen className="w-8 h-8" />
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/30 group-hover:scale-110 transition-transform">
+                  <BookOpen className="w-7 h-7" />
                 </div>
                 <span className="px-3.5 py-1.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
                   {subjects.length} مواد مقررة
@@ -212,23 +212,23 @@ export default function HomePortal({
                   📚 المواد الدراسية
                 </h4>
                 <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1.5 leading-relaxed">
-                  فهرس الفصول والدروس، تحديد ما تم دراسته، مكان التوقف الحالي، ومراجعات الذكاء الاصطناعي الذكية.
+                  فهرس الفصول والدروس، مكان التوقف الحالي، وتحديد ما تمت دراسته ومراجعته.
                 </p>
               </div>
 
               {/* 3 Metric Pills */}
               <div className="grid grid-cols-3 gap-2 pt-2 text-center text-xs">
-                <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
                   <div className="text-slate-400 font-bold text-[11px]">المدروس</div>
-                  <div className="text-slate-800 font-black text-sm mt-0.5">{studiedLessons}</div>
+                  <div className="text-slate-800 font-black text-base mt-0.5">{studiedLessons}</div>
                 </div>
-                <div className="bg-teal-50 p-2.5 rounded-xl border border-teal-100">
+                <div className="bg-teal-50 p-2 rounded-xl border border-teal-100">
                   <div className="text-teal-700 font-bold text-[11px]">متقن (95%+)</div>
-                  <div className="text-teal-800 font-black text-sm mt-0.5">{masteredLessons}</div>
+                  <div className="text-teal-800 font-black text-base mt-0.5">{masteredLessons}</div>
                 </div>
-                <div className="bg-amber-50 p-2.5 rounded-xl border border-amber-100">
+                <div className="bg-amber-50 p-2 rounded-xl border border-amber-100">
                   <div className="text-amber-700 font-bold text-[11px]">مراجعة</div>
-                  <div className="text-amber-800 font-black text-sm mt-0.5">{needsReviewLessons}</div>
+                  <div className="text-amber-800 font-black text-base mt-0.5">{needsReviewLessons}</div>
                 </div>
               </div>
             </div>
@@ -246,14 +246,14 @@ export default function HomePortal({
           {/* Card 2: الدروس الخصوصية */}
           <div 
             onClick={onNavigateToSchedule}
-            className="group relative bg-white rounded-3xl p-6 sm:p-8 border-2 border-slate-200 hover:border-blue-500 shadow-md hover:shadow-2xl hover:shadow-blue-600/10 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between"
+            className="group relative bg-white rounded-3xl p-6 sm:p-7 border-2 border-slate-200 hover:border-blue-500 shadow-md hover:shadow-2xl hover:shadow-blue-600/10 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -z-0 transition-transform group-hover:scale-125 duration-300"></div>
 
             <div className="relative z-10 space-y-4">
               <div className="flex items-center justify-between">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-blue-600/30 group-hover:scale-110 transition-transform">
-                  <Calendar className="w-8 h-8" />
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-blue-600/30 group-hover:scale-110 transition-transform">
+                  <Calendar className="w-7 h-7" />
                 </div>
                 <span className="px-3.5 py-1.5 rounded-full text-xs font-black bg-blue-100 text-blue-800 border border-blue-300">
                   {schedule.length} حصص أسبوعية
@@ -265,16 +265,16 @@ export default function HomePortal({
                   📅 الدروس الخصوصية
                 </h4>
                 <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1.5 leading-relaxed">
-                  جدول المواعيد الأسبوعية، أسماء المدرسين، المراكز التعليمية، وإمكانية تعديل وإضافة الحصص.
+                  جدول المواعيد الأسبوعية، أسماء المدرسين، المراكز، وتحديث الحصص القادمة.
                 </p>
               </div>
 
               {/* Next Class Highlight */}
-              <div className="bg-blue-50/90 border border-blue-200/90 rounded-2xl p-4 space-y-2 shadow-xs">
+              <div className="bg-blue-50/90 border border-blue-200/90 rounded-2xl p-3.5 space-y-2 shadow-xs">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 text-xs font-black text-blue-900">
                     <CalendarClock className="w-4 h-4 text-blue-600" />
-                    <span>الحصة القادمة في الجدول:</span>
+                    <span>الحصة القادمة:</span>
                   </div>
                   {nextClassInfo && (
                     <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-blue-600 text-white shadow-2xs">
@@ -294,8 +294,8 @@ export default function HomePortal({
                       </span>
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs pt-0.5">
-                      <span className="font-black text-blue-800 bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-2xs">
+                    <div className="flex flex-wrap items-center justify-between gap-1.5 text-xs pt-0.5">
+                      <span className="font-black text-blue-900 bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-2xs">
                         ⏰ {nextClassInfo.formattedTime}
                       </span>
                       {nextClassInfo.location && (
@@ -306,7 +306,7 @@ export default function HomePortal({
                     </div>
                   </div>
                 ) : (
-                  <div className="text-xs text-slate-500 py-1">لا توجد حصص مسجلة حالياً</div>
+                  <div className="text-xs text-slate-500 py-1 font-semibold">لا توجد حصص مسجلة حالياً</div>
                 )}
               </div>
             </div>
@@ -321,11 +321,116 @@ export default function HomePortal({
             </div>
           </div>
 
+          {/* Card 3: مركز الاختبارات (NEW HORIZONTAL TAB) */}
+          <div 
+            onClick={() => {
+              const el = document.getElementById('exam-center-section');
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            className="group relative bg-white rounded-3xl p-6 sm:p-7 border-2 border-slate-200 hover:border-amber-500 shadow-md hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col justify-between"
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-50 rounded-bl-full -z-0 transition-transform group-hover:scale-125 duration-300"></div>
+
+            <div className="relative z-10 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 via-yellow-500 to-amber-600 text-white flex items-center justify-center shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform">
+                  <Award className="w-7 h-7" />
+                </div>
+                <span className="px-3.5 py-1.5 rounded-full text-xs font-black bg-amber-100 text-amber-900 border border-amber-300">
+                  {audit.totalPending} بانتظار الاختبار
+                </span>
+              </div>
+
+              <div>
+                <h4 className="text-2xl font-black text-slate-900 group-hover:text-amber-700 transition-colors">
+                  🎯 مركز الاختبارات
+                </h4>
+                <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1.5 leading-relaxed">
+                  العد التنازلي للاختبار، مراية التدقيق، وتسجيل نتائج الدروس والفصول الشاملة.
+                </p>
+              </div>
+
+              {/* Upcoming Exam Highlight Box */}
+              <div className="bg-amber-50/90 border border-amber-200/90 rounded-2xl p-3.5 space-y-2 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs font-black text-amber-950">
+                    <Hourglass className="w-4 h-4 text-amber-600" />
+                    <span>الاختبار القادم:</span>
+                  </div>
+                  {upcomingExam && (
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-rose-600 text-white shadow-2xs animate-pulse">
+                      {countdown?.text || 'قريباً'}
+                    </span>
+                  )}
+                </div>
+
+                {upcomingExam ? (
+                  <div className="space-y-2 pt-1 border-t border-amber-200/70">
+                    <div className="flex items-center justify-between text-xs sm:text-sm">
+                      <span className="font-black text-slate-900 line-clamp-1">
+                        {upcomingExam.targetTitle}
+                      </span>
+                      <span className="font-bold text-amber-900 text-xs px-2 py-0.5 bg-amber-100 rounded-md shrink-0 mr-1 border border-amber-300">
+                        {upcomingExam.subjectName}
+                      </span>
+                    </div>
+
+                    {/* BOLD, HIGH CONTRAST DATE & TIME BADGES */}
+                    <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                      <span className="font-black text-slate-950 bg-white px-2.5 py-1 rounded-lg border-2 border-slate-300 shadow-xs text-xs flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-blue-600" />
+                        <span>تاريخ: <strong className="font-black text-slate-900">{upcomingExam.scheduledDate}</strong></span>
+                      </span>
+                      {upcomingExam.scheduledTime && (
+                        <span className="font-black text-slate-950 bg-amber-300 px-2.5 py-1 rounded-lg border border-amber-400 shadow-xs text-xs flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 text-slate-950" />
+                          <span>الساعة: <strong className="font-black text-slate-950">{upcomingExam.scheduledTime}</strong></span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-xs text-amber-900/80 font-bold py-1 flex items-center justify-between">
+                    <span>لا يوجد اختبار مجدول حالياً</span>
+                    <span className="text-[11px] text-amber-700 underline font-black">جدولة اختبار 📅</span>
+                  </div>
+                )}
+              </div>
+
+              {/* 3 Metric Pills */}
+              <div className="grid grid-cols-3 gap-2 pt-2 text-center text-xs">
+                <div className="bg-amber-50 p-2 rounded-xl border border-amber-100">
+                  <div className="text-amber-800 font-bold text-[10px]">بانتظار الاختبار</div>
+                  <div className="text-amber-950 font-black text-base mt-0.5">{audit.totalPending}</div>
+                </div>
+                <div className="bg-rose-50 p-2 rounded-xl border border-rose-100">
+                  <div className="text-rose-700 font-bold text-[10px]">بحاجة لمراجعة</div>
+                  <div className="text-rose-900 font-black text-base mt-0.5">{audit.totalNeedsReview}</div>
+                </div>
+                <div className="bg-emerald-50 p-2 rounded-xl border border-emerald-100">
+                  <div className="text-emerald-700 font-bold text-[10px]">متقن (95%+)</div>
+                  <div className="text-emerald-900 font-black text-base mt-0.5">{audit.totalMastered}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative z-10 pt-5 mt-4 flex items-center justify-between border-t border-slate-100 text-amber-700 font-extrabold text-sm group-hover:text-amber-800">
+              <span className="flex items-center gap-1.5">
+                <span>مراية المتابعة والتدقيق</span>
+              </span>
+              <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-all transform group-hover:-translate-x-1">
+                <ArrowLeft className="w-5 h-5" />
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
       {/* NEW SECTION: مركز الاختبارات والتقييمات الذكية | مراية متابعة يارا 🎯 */}
-      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-sm space-y-6">
+      <div id="exam-center-section" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
         
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
@@ -335,11 +440,11 @@ export default function HomePortal({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-black text-slate-900 text-lg sm:text-xl">
+                <h3 className="font-black text-slate-900 text-lg sm:text-2xl">
                   مركز الاختبارات والتقييمات | مراية المتابعة 🎯
                 </h3>
               </div>
-              <p className="text-xs sm:text-sm text-slate-500 font-semibold mt-0.5">
+              <p className="text-xs sm:text-sm text-slate-500 font-bold mt-0.5">
                 العد التنازلي للاختبار القادم، ومتابعة الدروس والفصول التي لم تُختبر بعد لضمان التفوق الكامل.
               </p>
             </div>
@@ -347,57 +452,60 @@ export default function HomePortal({
 
           <button
             onClick={onOpenScheduleExamModal}
-            className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black shadow-md shadow-emerald-600/20 flex items-center gap-2 transition-all self-start md:self-auto shrink-0"
+            className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-black shadow-md shadow-emerald-600/20 flex items-center gap-2 transition-all self-start md:self-auto shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>جدولة موعد اختبار جديد 📅</span>
           </button>
         </div>
 
-        {/* 1. UPCOMING SCHEDULED EXAM & LIVE COUNTDOWN */}
+        {/* 1. UPCOMING SCHEDULED EXAM & LIVE COUNTDOWN (SUPER BOLD & CLEAR) */}
         {upcomingExam ? (
-          <div className="relative overflow-hidden bg-gradient-to-l from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-5 text-white shadow-lg border border-indigo-500/30">
-            <div className="absolute right-0 top-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="relative overflow-hidden bg-gradient-to-l from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-7 text-white shadow-xl border-2 border-indigo-500/40">
+            <div className="absolute right-0 top-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-black px-3 py-1 rounded-full bg-yellow-400 text-yellow-950 shadow-sm animate-pulse flex items-center gap-1.5">
-                    <Hourglass className="w-3.5 h-3.5" />
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <span className="text-sm font-black px-4 py-1.5 rounded-full bg-yellow-400 text-yellow-950 shadow-md animate-pulse flex items-center gap-2">
+                    <Hourglass className="w-4 h-4 text-yellow-950" />
                     <span>{countdown?.text || 'موعد الاختبار القادم'}</span>
                   </span>
-                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-lg bg-white/10 text-emerald-300 border border-white/10">
+                  <span className="text-xs font-black px-3 py-1 rounded-xl bg-white/15 text-emerald-300 border border-white/20">
                     {upcomingExam.subjectName}
                   </span>
-                  <span className="text-[11px] font-bold text-slate-300">
+                  <span className="text-xs font-black px-3 py-1 rounded-xl bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
                     {upcomingExam.targetType === 'unit' ? '🏆 اختبار شامل للفصل' : '📝 اختبار درس'}
                   </span>
                 </div>
 
-                <h4 className="text-base sm:text-lg font-black text-white">
+                <h4 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-wide">
                   {upcomingExam.targetTitle}
                 </h4>
 
-                <div className="flex flex-wrap items-center gap-4 text-xs text-slate-300 pt-1">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5 text-blue-400" />
-                    <span>تاريخ الاختبار: {upcomingExam.scheduledDate}</span>
-                  </span>
+                {/* HIGH CONTRAST BOLD DATE & TIME INFO BADGES */}
+                <div className="flex flex-wrap items-center gap-3 pt-2">
+                  <div className="bg-white text-slate-900 font-black text-sm sm:text-base px-4 py-2 rounded-xl shadow-md border-2 border-slate-200 flex items-center gap-2.5">
+                    <Calendar className="w-5 h-5 text-blue-600" />
+                    <span>تاريخ الاختبار: <strong className="font-black text-slate-950 underline underline-offset-4 decoration-blue-500">{upcomingExam.scheduledDate}</strong></span>
+                  </div>
+
                   {upcomingExam.scheduledTime && (
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-amber-400" />
-                      <span>الساعة: {upcomingExam.scheduledTime}</span>
-                    </span>
+                    <div className="bg-amber-400 text-slate-950 font-black text-sm sm:text-base px-4 py-2 rounded-xl shadow-md border-2 border-amber-300 flex items-center gap-2.5">
+                      <Clock className="w-5 h-5 text-slate-950" />
+                      <span>الساعة / التوقيت: <strong className="font-black text-slate-950">{upcomingExam.scheduledTime}</strong></span>
+                    </div>
                   )}
+
                   {upcomingExam.notes && (
-                    <span className="text-yellow-200 font-medium">
-                      📌 {upcomingExam.notes}
-                    </span>
+                    <div className="bg-slate-800/90 text-yellow-200 font-bold text-xs sm:text-sm px-3.5 py-2 rounded-xl border border-yellow-400/30 flex items-center gap-2">
+                      <span>📌 {upcomingExam.notes}</span>
+                    </div>
                   )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 self-start md:self-auto shrink-0 pt-2 md:pt-0">
+              <div className="flex items-center gap-3 self-start lg:self-auto shrink-0 pt-2 lg:pt-0">
                 <button
                   onClick={() => {
                     const sub = subjects.find(s => s.id === upcomingExam.subjectId);
@@ -410,18 +518,18 @@ export default function HomePortal({
                       });
                     }
                   }}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-md shadow-emerald-600/30 flex items-center gap-1.5 transition-all"
+                  className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-sm sm:text-base rounded-2xl shadow-lg shadow-emerald-600/40 flex items-center gap-2 transition-all hover:scale-105"
                 >
-                  <Award className="w-4 h-4 text-yellow-300" />
+                  <Award className="w-5 h-5 text-yellow-300" />
                   <span>بدء / تسجيل النتيجة ✍️</span>
                 </button>
 
                 <button
                   onClick={() => onDeleteScheduledExam(upcomingExam.id)}
                   title="إلغاء موعد هذا الاختبار"
-                  className="p-2 bg-white/10 hover:bg-rose-600 text-slate-300 hover:text-white rounded-xl transition-all border border-white/10"
+                  className="p-3 bg-white/10 hover:bg-rose-600 text-slate-300 hover:text-white rounded-2xl transition-all border border-white/10 hover:border-rose-500"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-5 h-5" />
                 </button>
               </div>
             </div>

@@ -7,6 +7,7 @@ import ScheduleView from './components/ScheduleView';
 import TestModal from './components/TestModal';
 import SyllabusEditorModal from './components/SyllabusEditorModal';
 import ScheduleExamModal from './components/ScheduleExamModal';
+import SyncDevicesModal from './components/SyncDevicesModal';
 import { initialSubjects, initialSchedule } from './data/defaultData';
 
 export default function App() {
@@ -68,6 +69,7 @@ export default function App() {
   });
 
   const [isScheduleExamModalOpen, setIsScheduleExamModalOpen] = useState(false);
+  const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
 
   // Modals state
   const [testModal, setTestModal] = useState({
@@ -364,6 +366,34 @@ export default function App() {
     e.target.value = '';
   };
 
+  // Apply Cross-Device Sync Data (from WhatsApp Code or JSON file)
+  const handleApplyImportedData = ({ subjects: newSubjects, schedule: newSchedule, scheduledExams: newExams }) => {
+    if (newSubjects && Array.isArray(newSubjects)) {
+      setSubjects(newSubjects);
+      try {
+        localStorage.setItem('study_tracker_subjects', JSON.stringify(newSubjects));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    if (newSchedule && Array.isArray(newSchedule)) {
+      setSchedule(newSchedule);
+      try {
+        localStorage.setItem('study_tracker_schedule', JSON.stringify(newSchedule));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    if (newExams && Array.isArray(newExams)) {
+      setScheduledExams(newExams);
+      try {
+        localStorage.setItem('study_tracker_scheduled_exams', JSON.stringify(newExams));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
   // Reset to default data
   const handleResetData = () => {
     if (window.confirm("هل تريد استعادة البيانات الأصلية النظيفة؟ سيتم تصفير أي تعديلات.")) {
@@ -383,13 +413,14 @@ export default function App() {
         isAdmin={isAdmin}
         setIsAdmin={setIsAdmin}
         onGoHome={() => setCurrentScreen('home')}
+        onOpenSyncModal={() => setIsSyncModalOpen(true)}
         onExportData={handleExportData}
         onImportData={handleImportData}
         onResetData={handleResetData}
       />
 
-      {/* Main Container */}
-      <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 flex-1">
+      {/* Main Container - Extended to 1720px widescreen */}
+      <main className="max-w-[1720px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 flex-1">
         
         {/* 1. SCREEN: HOME LANDING PAGE */}
         {currentScreen === 'home' && (
@@ -482,9 +513,19 @@ export default function App() {
         onUpdateSubject={handleUpdateSubject}
       />
 
+      {/* Sync Across Devices Modal (Yara phone <-> Brother laptop) */}
+      <SyncDevicesModal
+        isOpen={isSyncModalOpen}
+        onClose={() => setIsSyncModalOpen(false)}
+        subjects={subjects}
+        schedule={schedule}
+        scheduledExams={scheduledExams}
+        onApplyImportedData={handleApplyImportedData}
+      />
+
       {/* Footer */}
       <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="max-w-[1720px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p>
             🎓 منصة إنجاز للمتابعة المدرسية الذكية — صُممت خصيصاً لدعم وتفوق يارا في الثانوية العامة 🌸
           </p>
