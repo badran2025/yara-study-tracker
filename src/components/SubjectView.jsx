@@ -27,6 +27,7 @@ import {
   Edit3,
   X
 } from 'lucide-react';
+import { getNextUpcomingClass } from '../utils/scheduleHelpers';
 
 const iconMap = {
   Calculator,
@@ -150,9 +151,8 @@ export default function SubjectView({
     ? Math.round((subjectStudied / subjectTotal) * 100) 
     : 0;
 
-  // Next class for this subject specifically from schedule
-  const subjectClasses = schedule.filter(c => c.subjectId === activeSubject.id);
-  const nextClass = subjectClasses[0];
+  // Next upcoming class for this subject specifically from schedule (real-time by date/time)
+  const nextClassInfo = getNextUpcomingClass(schedule, subjects, activeSubject.id);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -367,17 +367,24 @@ export default function SubjectView({
 
             {/* 5. Next Tutoring Class for THIS Subject specifically */}
             <div className="bg-white p-3 rounded-2xl border border-blue-200 shadow-2xs col-span-2 sm:col-span-1 bg-blue-50/20">
-              <div className="text-[11px] text-blue-900 font-bold flex items-center gap-1">
-                <CalendarClock className="w-3.5 h-3.5 text-blue-600" />
-                <span>أقرب حصة دراسية للمادة</span>
+              <div className="text-[11px] text-blue-900 font-bold flex items-center justify-between">
+                <span className="flex items-center gap-1">
+                  <CalendarClock className="w-3.5 h-3.5 text-blue-600" />
+                  <span>أقرب حصة دراسية للمادة</span>
+                </span>
+                {nextClassInfo && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-600 text-white">
+                    {nextClassInfo.relativeDay}
+                  </span>
+                )}
               </div>
-              {nextClass ? (
-                <div>
-                  <div className="text-sm font-black text-slate-800 mt-0.5 truncate">
-                    {nextClass.day}: {nextClass.time}
+              {nextClassInfo ? (
+                <div className="mt-1 space-y-0.5">
+                  <div className="text-xs sm:text-sm font-black text-slate-800">
+                    ⏰ {nextClassInfo.formattedTime}
                   </div>
                   <div className="text-[10px] text-blue-700 font-bold truncate">
-                    {nextClass.teacher} ({nextClass.location})
+                    {nextClassInfo.teacher} {nextClassInfo.location ? `• ${nextClassInfo.location}` : ''}
                   </div>
                 </div>
               ) : (

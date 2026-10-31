@@ -19,6 +19,7 @@ import {
   BookCheck,
   Home
 } from 'lucide-react';
+import { getNextUpcomingClass } from '../utils/scheduleHelpers';
 
 const iconMap = {
   Calculator,
@@ -121,9 +122,8 @@ export default function SubjectsHub({
             ? Math.round((subjectStudied / subjectTotal) * 100) 
             : 0;
 
-          // Find schedule classes for this subject specifically
-          const subjectClasses = schedule.filter(c => c.subjectId === subject.id);
-          const nextClass = subjectClasses[0];
+          // Real-time next upcoming class for this subject
+          const nextClassInfo = getNextUpcomingClass(schedule, subjects, subject.id);
 
           return (
             <div
@@ -213,19 +213,28 @@ export default function SubjectsHub({
 
                   {/* Next Class for THIS Subject specifically */}
                   <div className="p-3 bg-blue-50/60 border border-blue-200 rounded-xl space-y-1">
-                    <div className="flex items-center gap-1.5 text-[11px] font-black text-blue-900">
-                      <CalendarClock className="w-3.5 h-3.5 text-blue-600" />
-                      <span>موعد الحصة في الجدول:</span>
-                    </div>
-                    {nextClass ? (
-                      <div className="flex items-center justify-between text-xs font-bold text-slate-800 pr-4">
-                        <span>{nextClass.day}: {nextClass.time}</span>
-                        <span className="text-[10px] text-blue-700 bg-white px-2 py-0.5 rounded border border-blue-200">
-                          {nextClass.location}
+                    <div className="flex items-center justify-between text-[11px] font-black text-blue-900">
+                      <span className="flex items-center gap-1.5">
+                        <CalendarClock className="w-3.5 h-3.5 text-blue-600" />
+                        <span>موعد الحصة القادمة:</span>
+                      </span>
+                      {nextClassInfo && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-600 text-white shadow-2xs">
+                          {nextClassInfo.relativeDay}
                         </span>
+                      )}
+                    </div>
+                    {nextClassInfo ? (
+                      <div className="flex items-center justify-between text-xs font-bold text-slate-800 pr-2 pt-0.5">
+                        <span className="text-blue-950 font-black">⏰ {nextClassInfo.formattedTime}</span>
+                        {nextClassInfo.location && (
+                          <span className="text-[10px] text-blue-700 bg-white px-2 py-0.5 rounded border border-blue-200">
+                            {nextClassInfo.location}
+                          </span>
+                        )}
                       </div>
                     ) : (
-                      <div className="text-[11px] text-slate-400 pr-4">لا توجد حصة مسجلة في الجدول</div>
+                      <div className="text-[11px] text-slate-400 pr-2">لا توجد حصة مسجلة في الجدول</div>
                     )}
                   </div>
 

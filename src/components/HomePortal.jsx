@@ -13,6 +13,7 @@ import {
   CalendarClock
 } from 'lucide-react';
 import { motivationalQuotes } from '../data/defaultData';
+import { getNextUpcomingClass } from '../utils/scheduleHelpers';
 
 export default function HomePortal({ 
   subjects, 
@@ -58,8 +59,8 @@ export default function HomePortal({
     ? Math.round((masteredLessons / totalLessons) * 100) 
     : 0;
 
-  // Next upcoming class from schedule
-  const nextClass = schedule[0];
+  // Real-time Next upcoming class from schedule (calculated by date & time)
+  const nextClassInfo = getNextUpcomingClass(schedule, subjects);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
@@ -217,20 +218,43 @@ export default function HomePortal({
               </div>
 
               {/* Next Class Highlight */}
-              <div className="bg-blue-50/80 border border-blue-200 rounded-2xl p-3.5 space-y-1.5">
-                <div className="flex items-center gap-1.5 text-xs font-black text-blue-900">
-                  <CalendarClock className="w-4 h-4 text-blue-600" />
-                  <span>الحصة القادمة في الجدول:</span>
-                </div>
-                {nextClass ? (
-                  <div className="flex items-center justify-between text-xs sm:text-sm">
-                    <span className="font-extrabold text-slate-800">{nextClass.day}: {nextClass.teacher}</span>
-                    <span className="font-bold text-blue-700 bg-white px-2 py-0.5 rounded-md border border-blue-200">
-                      {nextClass.time}
+              <div className="bg-blue-50/90 border border-blue-200/90 rounded-2xl p-4 space-y-2 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs font-black text-blue-900">
+                    <CalendarClock className="w-4 h-4 text-blue-600" />
+                    <span>الحصة القادمة في الجدول:</span>
+                  </div>
+                  {nextClassInfo && (
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-blue-600 text-white shadow-2xs">
+                      {nextClassInfo.relativeDay}
                     </span>
+                  )}
+                </div>
+
+                {nextClassInfo ? (
+                  <div className="space-y-1.5 pt-1 border-t border-blue-200/60">
+                    <div className="flex items-center justify-between text-xs sm:text-sm">
+                      <span className="font-black text-slate-900">
+                        {nextClassInfo.subjectName}
+                      </span>
+                      <span className="font-bold text-slate-600 text-xs">
+                        {nextClassInfo.teacher}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs pt-0.5">
+                      <span className="font-black text-blue-800 bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-2xs">
+                        ⏰ {nextClassInfo.formattedTime}
+                      </span>
+                      {nextClassInfo.location && (
+                        <span className="text-slate-500 font-semibold text-[11px]">
+                          📍 {nextClassInfo.location}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 ) : (
-                  <div className="text-xs text-slate-500">لا توجد حصص مسجلة حالياً</div>
+                  <div className="text-xs text-slate-500 py-1">لا توجد حصص مسجلة حالياً</div>
                 )}
               </div>
             </div>
