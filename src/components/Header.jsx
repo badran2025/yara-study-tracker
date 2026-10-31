@@ -15,6 +15,7 @@ export default function Header({
   isAdmin, 
   setIsAdmin, 
   onGoHome,
+  syncStatus = 'synced',
   onOpenSyncModal,
   onExportData, 
   onImportData, 
@@ -52,6 +53,36 @@ export default function Header({
           {/* Right Controls: Mode Switcher & Backup */}
           <div className="flex items-center gap-2 sm:gap-3">
             
+            {/* Cloud Realtime Status Indicator */}
+            {syncStatus === 'synced' && (
+              <div 
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 text-xs font-black shadow-2xs"
+                title="الموقع متصل بقاعدة بيانات فايربيز ويتزامن فورياً بين جميع الأجهزة"
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span className="hidden md:inline">مزامنة سحابية حية ☁️</span>
+                <span className="md:hidden">مباشر 🟢</span>
+              </div>
+            )}
+            {syncStatus === 'saving' && (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-800 border border-amber-300 text-xs font-black shadow-2xs">
+                <RefreshCw className="w-3.5 h-3.5 text-amber-600 animate-spin" />
+                <span className="hidden sm:inline">جاري الحفظ بالسحابة...</span>
+                <span className="sm:hidden">حفظ...</span>
+              </div>
+            )}
+            {syncStatus === 'pending_setup' && (
+              <a 
+                href="https://console.firebase.google.com/project/yara-study-tracker/firestore"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-black hover:bg-amber-200 transition-colors"
+                title="اضغط هنا لتفعيل Cloud Firestore في حساب فايربيز بضغطة زر واحدة"
+              >
+                <span>تفعيل Firestore بالسحابة ⚠️</span>
+              </a>
+            )}
+
             {/* Quick Home Button */}
             <button
               onClick={onGoHome}

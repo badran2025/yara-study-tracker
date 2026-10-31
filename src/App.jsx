@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from './components/Header';
 import HomePortal from './components/HomePortal';
 import SubjectsHub from './components/SubjectsHub';
 import SubjectView from './components/SubjectView';
 import ScheduleView from './components/ScheduleView';
+import ExamsCenterView from './components/ExamsCenterView';
 import TestModal from './components/TestModal';
 import SyllabusEditorModal from './components/SyllabusEditorModal';
 import ScheduleExamModal from './components/ScheduleExamModal';
 import SyncDevicesModal from './components/SyncDevicesModal';
 import { initialSubjects, initialSchedule } from './data/defaultData';
+import { onSnapshot } from 'firebase/firestore';
+import { TRACKER_DOC_REF, saveStateToCloud } from './services/firebase';
 
 export default function App() {
   // Load from localStorage or defaults with automatic cache migration for v7 (All 3 Arabic Books Complete)
@@ -107,6 +110,137 @@ export default function App() {
       console.error("Failed to save scheduled exams to localStorage", err);
     }
   }, [scheduledExams]);
+
+  // Real-time Cloud Firestore Sync status: 'synced' | 'saving' | 'pending_setup' | 'offline'
+  const [syncStatus, setSyncStatus] = useState('synced');
+  const isRemoteUpdateRef = useRef(false);
+  const isInitialLoadRef = useRef(true);
+
+  // 1. Listen for real-time changes across all devices via Cloud Firestore
+  useEffect(() => {
+    let unsubscribe = () => {};
+
+    try {
+      unsubscribe = onSnapshot(
+        TRACKER_DOC_REF,
+        (docSnap) => {
+          if (docSnap.exists()) {
+            const cloudData = docSnap.data();
+
+            // Mark this update as coming from the cloud so we don't bounce it back
+            isRemoteUpdateRef.current = true;
+
+            // Smart Merge for Subjects: ensure local studied lessons aren't lost if cloud had none
+            if (cloudData.subjects && Array.isArray(cloudData.subjects)) {
+              setSubjects(prevLocal => {
+                let localStudied = 0;
+                prevLocal.forEach(s => s.units.forEach(u => u.lessons.forEach(l => { if (l.isStudied) localStudied++; })));
+
+                let cloudStudied = 0;
+                cloudData.subjects.forEach(s => s.units.forEach(u => u.lessons.forEach(l => { if (l.isStudied) cloudStudied++; })));
+
+                if (localStudied > cloudStudied) {
+                  // Merge local studied marks into the cloud subjects
+                  const merged = cloudData.subjects.map(cSub => {
+                    const lSub = prevLocal.find(s => s.id === cSub.id);
+                    if (!lSub) return cSub;
+                    return {
+                      ...cSub,
+                      units: cSub.units.map(cUnit => {
+                        const lUnit = lSub.units.find(u => u.id === cUnit.id);
+                        if (!lUnit) return cUnit;
+                        return {
+                          ...cUnit,
+                          lessons: cUnit.lessons.map(cLesson => {
+                            const lLesson = lUnit.lessons.find(l => l.id === cLesson.id);
+                            if (lLesson && lLesson.isStudied && !cLesson.isStudied) {
+                              return { ...cLesson, isStudied: true, quiz: lLesson.quiz || cLesson.quiz, status: lLesson.status || cLesson.status };
+                            }
+                            return cLesson;
+                          })
+                        };
+                      })
+                    };
+                  });
+                  // Immediately seed cloud with the merged progress
+                  saveStateToCloud(merged, cloudData.schedule || schedule, cloudData.scheduledExams || scheduledExams).catch(() => {});
+                  return merged;
+                }
+
+                return cloudData.subjects;
+              });
+            }
+
+            if (cloudData.schedule && Array.isArray(cloudData.schedule)) {
+              setSchedule(cloudData.schedule);
+            }
+
+            if (cloudData.scheduledExams && Array.isArray(cloudData.scheduledExams)) {
+              setScheduledExams(cloudData.scheduledExams);
+            }
+
+            setSyncStatus('synced');
+          } else {
+            // First time: Cloud document doesn't exist yet, seed with local data
+            saveStateToCloud(subjects, schedule, scheduledExams)
+              .then(() => setSyncStatus('synced'))
+              .catch(err => {
+                if (err?.code === 'permission-denied' || err?.message?.includes('Cloud Firestore API')) {
+                  setSyncStatus('pending_setup');
+                } else {
+                  setSyncStatus('offline');
+                }
+              });
+          }
+        },
+        (error) => {
+          console.warn("Firestore onSnapshot error:", error);
+          if (error?.code === 'permission-denied' || error?.message?.includes('Cloud Firestore API')) {
+            setSyncStatus('pending_setup');
+          } else {
+            setSyncStatus('offline');
+          }
+        }
+      );
+    } catch (err) {
+      console.warn("Failed to subscribe to Firestore:", err);
+      setSyncStatus('offline');
+    }
+
+    return () => unsubscribe();
+  }, []);
+
+  // 2. Debounced auto-save to Cloud whenever user makes local modifications
+  useEffect(() => {
+    // Skip on initial component mount
+    if (isInitialLoadRef.current) {
+      isInitialLoadRef.current = false;
+      return;
+    }
+
+    // Skip if change originated from a remote Firestore snapshot
+    if (isRemoteUpdateRef.current) {
+      isRemoteUpdateRef.current = false;
+      return;
+    }
+
+    setSyncStatus('saving');
+    const timer = setTimeout(() => {
+      saveStateToCloud(subjects, schedule, scheduledExams)
+        .then(() => {
+          setSyncStatus('synced');
+        })
+        .catch(err => {
+          if (err?.code === 'permission-denied' || err?.message?.includes('Cloud Firestore API')) {
+            setSyncStatus('pending_setup');
+          } else {
+            setSyncStatus('offline');
+          }
+        });
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [subjects, schedule, scheduledExams]);
 
   const handleSaveScheduledExam = (examData) => {
     setScheduledExams(prev => [...prev, { id: `exam-${Date.now()}`, ...examData }]);
@@ -412,6 +546,7 @@ export default function App() {
       <Header
         isAdmin={isAdmin}
         setIsAdmin={setIsAdmin}
+        syncStatus={syncStatus}
         onGoHome={() => setCurrentScreen('home')}
         onOpenSyncModal={() => setIsSyncModalOpen(true)}
         onExportData={handleExportData}
@@ -431,6 +566,7 @@ export default function App() {
             isAdmin={isAdmin}
             onNavigateToSubjects={() => setCurrentScreen('subjects_hub')}
             onNavigateToSchedule={() => setCurrentScreen('schedule')}
+            onNavigateToExams={() => setCurrentScreen('exams')}
             onSelectSubject={(subjectId) => {
               setActiveSubjectId(subjectId);
               setCurrentScreen('subject_detail');
@@ -481,6 +617,18 @@ export default function App() {
             subjects={subjects}
             isAdmin={isAdmin}
             onUpdateSubjectTeacher={handleUpdateSubjectTeacher}
+            onBackToHome={() => setCurrentScreen('home')}
+          />
+        )}
+
+        {/* 5. SCREEN: EXAMS CENTER & AUDIT MIRROR (مركز الاختبارات ومراية المتابعة والتدقيق) */}
+        {currentScreen === 'exams' && (
+          <ExamsCenterView
+            subjects={subjects}
+            scheduledExams={scheduledExams}
+            onOpenScheduleExamModal={() => setIsScheduleExamModalOpen(true)}
+            onDeleteScheduledExam={handleDeleteScheduledExam}
+            onOpenTestModal={handleOpenTestModal}
             onBackToHome={() => setCurrentScreen('home')}
           />
         )}
