@@ -22,10 +22,12 @@ export default function ScheduleView({
   setSchedule, 
   subjects, 
   isAdmin,
-  onBackToHome 
+  onBackToHome,
+  onUpdateSubjectTeacher
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null); // null = Add, string = Edit
+  const [syncTeacherWithSubject, setSyncTeacherWithSubject] = useState(true);
   
   const [formData, setFormData] = useState({
     subjectId: subjects[0]?.id || 'physics',
@@ -38,29 +40,33 @@ export default function ScheduleView({
 
   // Open modal for Adding
   const handleOpenAdd = () => {
+    const defaultSub = subjects[0];
     setEditingId(null);
     setFormData({
-      subjectId: subjects[0]?.id || 'physics',
+      subjectId: defaultSub?.id || 'physics',
       day: 'السبت',
       time: '10:00 ص - 11:00 ص',
-      teacher: '',
-      location: 'سنتر تعليمي',
+      teacher: defaultSub?.teacherName || '',
+      location: defaultSub?.tutoringLocation || 'سنتر تعليمي',
       notes: ''
     });
+    setSyncTeacherWithSubject(true);
     setIsModalOpen(true);
   };
 
   // Open modal for Editing
   const handleOpenEdit = (cls) => {
     setEditingId(cls.id);
+    const sub = subjects.find(s => s.id === cls.subjectId);
     setFormData({
       subjectId: cls.subjectId,
       day: cls.day,
       time: cls.time,
-      teacher: cls.teacher || '',
-      location: cls.location || 'سنتر تعليمي',
+      teacher: cls.teacher || sub?.teacherName || '',
+      location: cls.location || sub?.tutoringLocation || 'سنتر تعليمي',
       notes: cls.notes || ''
     });
+    setSyncTeacherWithSubject(true);
     setIsModalOpen(true);
   };
 
@@ -68,7 +74,7 @@ export default function ScheduleView({
   const handleSubmit = (e) => {
     e.preventDefault();
     const subject = subjects.find(s => s.id === formData.subjectId);
-    const finalTeacher = formData.teacher.trim() || subject?.teacherName || 'المدرس';
+    const finalTeacher = formData.teacher.trim() || subject?.teacherName || 'معلم المادة';
 
     if (editingId) {
       // Update existing
@@ -90,6 +96,11 @@ export default function ScheduleView({
         teacher: finalTeacher
       };
       setSchedule(prev => [...prev, newItem]);
+    }
+
+    // If sync with subject profile is enabled
+    if (syncTeacherWithSubject && onUpdateSubjectTeacher && formData.subjectId) {
+      onUpdateSubjectTeacher(formData.subjectId, finalTeacher, formData.location);
     }
 
     setIsModalOpen(false);
@@ -193,13 +204,14 @@ export default function ScheduleView({
                     setFormData(prev => ({ 
                       ...prev, 
                       subjectId: e.target.value,
-                      teacher: selectedSub?.teacherName || prev.teacher
+                      teacher: selectedSub?.teacherName || prev.teacher,
+                      location: selectedSub?.tutoringLocation || prev.location
                     }));
                   }}
                   className="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-slate-50 font-bold"
                 >
                   {subjects.map(s => (
-                    <option key={s.id} value={s.id}>{s.name} ({s.teacherName})</option>
+                    <option key={s.id} value={s.id}>{s.name}</option>
                   ))}
                 </select>
               </div>
@@ -238,7 +250,7 @@ export default function ScheduleView({
                     type="text"
                     value={formData.teacher}
                     onChange={(e) => setFormData(prev => ({ ...prev, teacher: e.target.value }))}
-                    placeholder="اسم المدرس"
+                    placeholder="اسم المدرس (مثال: أ/ محمد)"
                     className="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-slate-50 font-bold"
                   />
                 </div>
@@ -249,11 +261,22 @@ export default function ScheduleView({
                     type="text"
                     value={formData.location}
                     onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                    placeholder="سنتر أو أونلاين"
+                    placeholder="مثال: سنتر تعليمي أو أونلاين"
                     className="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-slate-50 font-bold"
                   />
                 </div>
               </div>
+
+              {/* Sync teacher with subject profile */}
+              <label className="flex items-center gap-2.5 p-3 bg-blue-50/70 border border-blue-200 rounded-xl cursor-pointer text-xs font-bold text-blue-900 select-none">
+                <input
+                  type="checkbox"
+                  checked={syncTeacherWithSubject}
+                  onChange={(e) => setSyncTeacherWithSubject(e.target.checked)}
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                />
+                <span>تحديث اسم المعلم والمكان في بطاقة المادة أيضاً (ليظهر بالرئيسية وفهرس المادة)</span>
+              </label>
 
               <div>
                 <label className="block font-bold text-slate-700 mb-1">ملاحظات إضافية (اختياري)</label>

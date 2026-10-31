@@ -147,7 +147,7 @@ export default function SubjectsHub({
                         <div className="flex items-center gap-2 text-xs text-slate-500 font-bold mt-0.5">
                           <span className="flex items-center gap-1">
                             <User className="w-3.5 h-3.5 text-emerald-600" />
-                            {subject.teacherName}
+                            {subject.teacherName || 'معلم المادة'}
                           </span>
                         </div>
                       </div>

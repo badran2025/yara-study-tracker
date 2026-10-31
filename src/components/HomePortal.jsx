@@ -289,7 +289,7 @@ export default function HomePortal({
                     <span className="font-extrabold text-slate-900 text-sm">{subject.name}</span>
                   </div>
                   <span className="text-[11px] text-slate-500 font-bold bg-white px-2 py-0.5 rounded-md border border-slate-200">
-                    {subject.teacherName}
+                    {subject.teacherName || 'معلم المادة'}
                   </span>
                 </div>
 

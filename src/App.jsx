@@ -37,11 +37,9 @@ export default function App() {
       const saved = localStorage.getItem('study_tracker_schedule');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (!parsed.some(c => c.subjectId === 'geology') || !parsed.some(c => c.teacher?.includes('محمد طارق'))) {
-          localStorage.setItem('study_tracker_schedule', JSON.stringify(initialSchedule));
-          return initialSchedule;
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed.some(c => c.subjectId === 'geology')) {
+          return parsed;
         }
-        return parsed;
       }
       return initialSchedule;
     } catch {
@@ -202,6 +200,45 @@ export default function App() {
   // Handler: Update Subject Syllabus
   const handleUpdateSubject = (updatedSubject) => {
     setSubjects(prev => prev.map(sub => sub.id === updatedSubject.id ? updatedSubject : sub));
+    if (updatedSubject.teacherName) {
+      setSchedule(prev => prev.map(c => {
+        if (c.subjectId === updatedSubject.id) {
+          return {
+            ...c,
+            teacher: updatedSubject.teacherName,
+            ...(updatedSubject.tutoringLocation ? { location: updatedSubject.tutoringLocation } : {})
+          };
+        }
+        return c;
+      }));
+    }
+  };
+
+  // Handler: Update Subject Teacher & Location across platform and sync with schedule
+  const handleUpdateSubjectTeacher = (subjectId, newTeacherName, newLocation) => {
+    setSubjects(prev => prev.map(sub => {
+      if (sub.id === subjectId) {
+        return {
+          ...sub,
+          teacherName: newTeacherName !== undefined ? newTeacherName : sub.teacherName,
+          tutoringLocation: newLocation !== undefined ? newLocation : sub.tutoringLocation
+        };
+      }
+      return sub;
+    }));
+
+    if (newTeacherName) {
+      setSchedule(prev => prev.map(item => {
+        if (item.subjectId === subjectId) {
+          return {
+            ...item,
+            teacher: newTeacherName,
+            ...(newLocation ? { location: newLocation } : {})
+          };
+        }
+        return item;
+      }));
+    }
   };
 
   // Backup / Export
@@ -313,6 +350,7 @@ export default function App() {
             onOpenTestModal={(subj, less) => setTestModal({ isOpen: true, subject: subj, lesson: less })}
             onOpenSyllabusEditor={(subj) => setSyllabusModal({ isOpen: true, subject: subj })}
             onDeleteQuiz={handleDeleteQuiz}
+            onUpdateSubjectTeacher={handleUpdateSubjectTeacher}
             onBackToHub={() => setCurrentScreen('subjects_hub')}
             onBackToHome={() => setCurrentScreen('home')}
           />
@@ -325,6 +363,7 @@ export default function App() {
             setSchedule={setSchedule}
             subjects={subjects}
             isAdmin={isAdmin}
+            onUpdateSubjectTeacher={handleUpdateSubjectTeacher}
             onBackToHome={() => setCurrentScreen('home')}
           />
         )}
