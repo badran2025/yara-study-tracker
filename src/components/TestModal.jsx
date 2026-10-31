@@ -18,13 +18,17 @@ export default function TestModal({
   isOpen, 
   onClose, 
   subject, 
+  target,
   lesson, 
   onSaveQuiz,
   onDeleteQuiz 
 }) {
-  if (!isOpen || !lesson) return null;
+  const targetItem = target || (lesson ? { id: lesson.id, title: lesson.title, quiz: lesson.quiz, type: 'lesson' } : null);
+  
+  if (!isOpen || !targetItem) return null;
 
-  const existingQuiz = lesson.quiz || {};
+  const existingQuiz = targetItem.quiz || {};
+  const isUnitExam = targetItem.type === 'unit';
 
   const [inputMode, setInputMode] = useState('percentage'); // 'percentage' | 'raw'
   const [percentage, setPercentage] = useState(existingQuiz.percentage || 95);
@@ -33,6 +37,19 @@ export default function TestModal({
   const [date, setDate] = useState(existingQuiz.date || new Date().toISOString().split('T')[0]);
   const [weaknesses, setWeaknesses] = useState(existingQuiz.weaknesses || '');
   const [geminiFeedback, setGeminiFeedback] = useState(existingQuiz.geminiFeedback || '');
+
+  // Reset form when targetItem changes
+  useEffect(() => {
+    if (targetItem) {
+      const q = targetItem.quiz || {};
+      setPercentage(q.percentage !== undefined ? q.percentage : 95);
+      setRawScore(q.score !== undefined ? q.score : 19);
+      setTotalScore(q.totalScore !== undefined ? q.totalScore : 20);
+      setDate(q.date || new Date().toISOString().split('T')[0]);
+      setWeaknesses(q.weaknesses || '');
+      setGeminiFeedback(q.geminiFeedback || '');
+    }
+  }, [targetItem?.id]);
 
   // Calculate effective percentage
   const currentPercentage = inputMode === 'percentage' 
@@ -66,7 +83,7 @@ export default function TestModal({
       }
     }
 
-    onSaveQuiz(subject.id, lesson.id, quizData);
+    onSaveQuiz(subject.id, targetItem.id, quizData, targetItem.type || 'lesson');
     onClose();
   };
 
@@ -81,12 +98,14 @@ export default function TestModal({
               <span className="px-2.5 py-0.5 rounded-md text-[11px] font-black bg-emerald-100 text-emerald-800">
                 {subject?.name}
               </span>
-              <span className="text-xs text-slate-400 font-bold">
-                تقييم الدرس واختبار Gemini
+              <span className={`px-2.5 py-0.5 rounded-md text-[11px] font-black ${
+                isUnitExam ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-slate-100 text-slate-700'
+              }`}>
+                {isUnitExam ? '🏆 اختبار نهائي شامل للفصل' : '📝 اختبار درس'}
               </span>
             </div>
-            <h3 className="text-lg sm:text-xl font-black text-slate-900 mt-1">
-              {lesson.title}
+            <h3 className="text-lg sm:text-xl font-black text-slate-900 mt-1.5 leading-snug">
+              {targetItem.title}
             </h3>
           </div>
 
@@ -110,175 +129,172 @@ export default function TestModal({
                   type="button"
                   onClick={() => setInputMode('percentage')}
                   className={`px-3 py-1 rounded-lg font-bold transition-all ${
-                    inputMode === 'percentage'
-                      ? 'bg-emerald-600 text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                    inputMode === 'percentage' 
+                      ? 'bg-emerald-600 text-white shadow-xs' 
+                      : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  نسبة مئوية مباشرة (%)
+                  نسبة مئوية (%)
                 </button>
                 <button
                   type="button"
                   onClick={() => setInputMode('raw')}
                   className={`px-3 py-1 rounded-lg font-bold transition-all ${
-                    inputMode === 'raw'
-                      ? 'bg-emerald-600 text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                    inputMode === 'raw' 
+                      ? 'bg-emerald-600 text-white shadow-xs' 
+                      : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  درجة من مجموع (مثال 19 من 20)
+                  درجة فعلية (من إجمالي)
                 </button>
               </div>
             </div>
 
-            {/* Inputs based on mode */}
-            {inputMode === 'percentage' ? (
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">
-                  النسبة المئوية النهائية من تحليل جيمناي:
-                </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={percentage}
-                    onChange={(e) => setPercentage(e.target.value)}
-                    className="w-full p-2.5 pl-10 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 font-black text-lg text-slate-800 outline-none"
-                    placeholder="مثال: 95"
-                    required
-                  />
-                  <Percent className="w-5 h-5 text-slate-400 absolute left-3 top-3" />
+            {/* Input by percentage */}
+            {inputMode === 'percentage' && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-500 font-semibold">النسبة المئوية:</span>
+                  <span className="font-black text-lg text-emerald-700 font-mono">
+                    {percentage}%
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={percentage}
+                  onChange={(e) => setPercentage(Number(e.target.value))}
+                  className="w-full accent-emerald-600 cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                  <span>0%</span>
+                  <span>50%</span>
+                  <span>75%</span>
+                  <span className="text-emerald-600 font-bold">95% (معيار التفوق)</span>
+                  <span>100%</span>
                 </div>
               </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-3">
+            )}
+
+            {/* Input by raw score */}
+            {inputMode === 'raw' && (
+              <div className="grid grid-cols-2 gap-3 pt-1">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">الدرجة التي حصلت عليها:</label>
+                  <label className="block text-slate-600 font-semibold mb-1">الدرجة المحققة:</label>
                   <input
                     type="number"
                     min="0"
-                    step="0.5"
+                    max={totalScore}
                     value={rawScore}
                     onChange={(e) => setRawScore(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 font-black text-base text-slate-800 outline-none"
-                    placeholder="مثال: 19"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-mono font-bold text-center text-sm focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">المجموع الكلي للاختبار:</label>
+                  <label className="block text-slate-600 font-semibold mb-1">الدرجة الكلية للاختبار:</label>
                   <input
                     type="number"
                     min="1"
-                    step="0.5"
                     value={totalScore}
                     onChange={(e) => setTotalScore(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 font-black text-base text-slate-800 outline-none"
-                    placeholder="مثال: 20"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-mono font-bold text-center text-sm focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
                     required
                   />
                 </div>
               </div>
             )}
+          </div>
 
-            {/* Live Threshold Verdict Banner */}
-            <div className={`p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 ${
-              isPassed 
-                ? 'bg-emerald-50 border-emerald-300 text-emerald-900' 
-                : 'bg-amber-50 border-amber-300 text-amber-950'
-            }`}>
-              <div className="flex items-center gap-2.5">
-                {isPassed ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                ) : (
-                  <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
-                )}
-                <div>
-                  <div className="font-black text-xs sm:text-sm">
-                    {isPassed 
-                      ? '🎉 النتيجة 95% فما فوق: الدرس مجتاز ومتقن بتفوق!' 
-                      : '⚠️ النتيجة أقل من 95%: الدرس سيُصنف كـ "يحتاج مراجعة"'}
-                  </div>
-                  <div className="text-[11px] opacity-80 mt-0.5">
-                    {isPassed 
-                      ? 'تم تحقيق معيار الإتقان الكامل بنجاح.' 
-                      : 'سيتم إضافة الدرس لقسم المراجعات الذكية حتى معالجة أوجه القصور.'}
-                  </div>
+          {/* Test Status & Grade Badge */}
+          <div className={`p-4 rounded-2xl border flex items-center justify-between ${
+            isPassed 
+              ? 'bg-emerald-50/80 border-emerald-300 text-emerald-950' 
+              : 'bg-amber-50/80 border-amber-300 text-amber-950'
+          }`}>
+            <div className="flex items-center gap-2.5">
+              {isPassed ? (
+                <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-sm">
+                  <Award className="w-5 h-5 text-yellow-300" />
+                </div>
+              ) : (
+                <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-sm">
+                  <AlertTriangle className="w-5 h-5" />
+                </div>
+              )}
+              <div>
+                <div className="font-extrabold text-sm">
+                  {isPassed ? 'متقن بتفوق (95% فأعلى) 🌟' : 'يحتاج مراجعة وتدريب إضافي ⚠️'}
+                </div>
+                <div className="text-[11px] opacity-80">
+                  {isPassed 
+                    ? (isUnitExam ? 'اجتياز ممتاز لاختبار الفصل الشامل!' : 'ممتاز جداً! تم استيعاب أفكار الدرس بنجاح.') 
+                    : 'النتيجة أقل من معيار التفوق؛ يُنصح بإعادة التدريب.'}
                 </div>
               </div>
-
-              <div className={`text-xl font-black shrink-0 ${isPassed ? 'text-emerald-700' : 'text-amber-700'}`}>
-                {currentPercentage}%
-              </div>
             </div>
 
-          </div>
-
-          {/* Weaknesses from Gemini (Mandatory especially if < 95%) */}
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="font-bold text-slate-800 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-emerald-600" />
-                <span>أوجه القصور والمفاهيم المطلوب مراجعتها (من تحليل جيمناي):</span>
-              </label>
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
-                !isPassed ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'text-slate-400'
-              }`}>
-                {!isPassed ? 'مهم جداً للتحسين' : 'اختياري'}
+            <div className="text-right">
+              <span className="text-2xl font-black font-mono">
+                {currentPercentage}%
               </span>
             </div>
-
-            <textarea
-              rows={4}
-              value={weaknesses}
-              onChange={(e) => setWeaknesses(e.target.value)}
-              placeholder="انسخ هنا النقاط التي حددها جيمناي/NotebookLM بعد تصحيح الاختبار، مثل:&#10;1. خطأ في استخدام قانون كيرشوف الثاني في المسار المغلق.&#10;2. الارتباك في تحديد إشارة القوة الدافعة الكهربية للبطارية.&#10;3. تحتاج حل 3 مسائل إضافية للتدريب."
-              className="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 text-slate-800 outline-none leading-relaxed resize-none text-xs"
-              required={!isPassed}
-            />
-            <p className="text-[11px] text-slate-500 mt-1">
-              ستظهر هذه النقاط بوضوح لأختك في قسم المراجعات لتسهيل التركيز عليها وإعادة اختبارها.
-            </p>
           </div>
 
-          {/* Additional Feedback / Date */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block font-bold text-slate-700 mb-1">
-                تاريخ إجراء الاختبار:
-              </label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 text-slate-800 outline-none text-xs"
-                required
-              />
-            </div>
+          {/* Date of Test */}
+          <div>
+            <label className="block font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-slate-500" />
+              <span>تاريخ إجراء الاختبار:</span>
+            </label>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full p-2.5 rounded-xl border border-slate-300 font-mono text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50 font-bold"
+              required
+            />
+          </div>
 
-            <div>
-              <label className="block font-bold text-slate-700 mb-1">
-                ملاحظة تشجيعية عامة (اختياري):
-              </label>
-              <input
-                type="text"
-                value={geminiFeedback}
-                onChange={(e) => setGeminiFeedback(e.target.value)}
-                placeholder="مثال: أحسنتِ جداً ومستواك في تقدم رائع!"
-                className="w-full p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 text-slate-800 outline-none text-xs"
-              />
-            </div>
+          {/* Weaknesses / Mistakes */}
+          <div>
+            <label className="block font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+              <FileText className="w-3.5 h-3.5 text-slate-500" />
+              <span>أوجه القصور والأسئلة التي أخطأت فيها يارا (اختياري):</span>
+            </label>
+            <textarea
+              rows="2"
+              value={weaknesses}
+              onChange={(e) => setWeaknesses(e.target.value)}
+              placeholder="مثال: الخلط بين المقصور والمنقوص، أو نسيان قانون كيرشوف الثاني..."
+              className="w-full p-3 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50"
+            />
+          </div>
+
+          {/* AI / Teacher Recommendation */}
+          <div>
+            <label className="block font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-yellow-500" />
+              <span>توصية المعلم / تقييم الذكاء الاصطناعي (Gemini Feedback):</span>
+            </label>
+            <textarea
+              rows="2"
+              value={geminiFeedback}
+              onChange={(e) => setGeminiFeedback(e.target.value)}
+              placeholder="مثال: مراجعة حل 10 مسائل تطبيقية على الجزئية لضمان تثبيت المعلومة."
+              className="w-full p-3 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50"
+            />
           </div>
 
           {/* Form Actions */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-4 border-t border-slate-100">
-            {lesson.quiz ? (
+            {targetItem.quiz ? (
               <button
                 type="button"
                 onClick={() => {
-                  if (window.confirm(`هل تريد بالتأكيد إلغاء وحذف نتيجة اختبار: "${lesson.title}"؟`)) {
-                    onDeleteQuiz(subject.id, lesson.id);
+                  if (window.confirm(`هل تريد بالتأكيد إلغاء وحذف نتيجة اختبار: "${targetItem.title}"؟`)) {
+                    onDeleteQuiz(subject.id, targetItem.id, targetItem.type || 'lesson');
                     onClose();
                   }
                 }}
@@ -295,7 +311,7 @@ export default function TestModal({
                 onClick={onClose}
                 className="px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-bold transition-colors"
               >
-                إغلاق
+                إلغاء
               </button>
               <button
                 type="submit"

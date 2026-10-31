@@ -6,6 +6,7 @@ import SubjectView from './components/SubjectView';
 import ScheduleView from './components/ScheduleView';
 import TestModal from './components/TestModal';
 import SyllabusEditorModal from './components/SyllabusEditorModal';
+import ScheduleExamModal from './components/ScheduleExamModal';
 import { initialSubjects, initialSchedule } from './data/defaultData';
 
 export default function App() {
@@ -55,11 +56,24 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState('home');
   const [activeSubjectId, setActiveSubjectId] = useState('physics');
 
+  // Scheduled Upcoming Exams state
+  const [scheduledExams, setScheduledExams] = useState(() => {
+    try {
+      const saved = localStorage.getItem('study_tracker_scheduled_exams');
+      if (saved) return JSON.parse(saved);
+      return [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [isScheduleExamModalOpen, setIsScheduleExamModalOpen] = useState(false);
+
   // Modals state
   const [testModal, setTestModal] = useState({
     isOpen: false,
     subject: null,
-    lesson: null
+    target: null
   });
 
   const [syllabusModal, setSyllabusModal] = useState({
@@ -83,6 +97,38 @@ export default function App() {
       console.error("Failed to save schedule to localStorage", err);
     }
   }, [schedule]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('study_tracker_scheduled_exams', JSON.stringify(scheduledExams));
+    } catch (err) {
+      console.error("Failed to save scheduled exams to localStorage", err);
+    }
+  }, [scheduledExams]);
+
+  const handleSaveScheduledExam = (examData) => {
+    setScheduledExams(prev => [...prev, { id: `exam-${Date.now()}`, ...examData }]);
+  };
+
+  const handleDeleteScheduledExam = (examId) => {
+    if (window.confirm("هل تريد بالتأكيد إلغاء موعد هذا الاختبار المجدول؟")) {
+      setScheduledExams(prev => prev.filter(e => e.id !== examId));
+    }
+  };
+
+  const handleOpenTestModal = (subj, targetOrLesson, unit = null) => {
+    let finalTarget = targetOrLesson;
+    if (unit && !targetOrLesson) {
+      finalTarget = { id: unit.id, title: `الاختبار النهائي الشامل: ${unit.title}`, quiz: unit.quiz, type: 'unit' };
+    } else if (targetOrLesson && !targetOrLesson.type) {
+      finalTarget = { id: targetOrLesson.id, title: targetOrLesson.title, quiz: targetOrLesson.quiz, type: 'lesson' };
+    }
+    setTestModal({
+      isOpen: true,
+      subject: subj,
+      target: finalTarget
+    });
+  };
 
   // Handler: Set current lesson (where they stopped)
   const handleSetCurrentLesson = (subjectId, lessonId) => {
@@ -142,17 +188,35 @@ export default function App() {
     }));
   };
 
-  // Handler: Save Quiz result from Gemini
-  const handleSaveQuiz = (subjectId, lessonId, quizData) => {
+  // Handler: Save Quiz result from Gemini (for Lesson or Unit Comprehensive Exam)
+  const handleSaveQuiz = (subjectId, targetId, quizData, targetType = 'lesson') => {
     const isPassed = quizData.percentage >= 95;
 
     setSubjects(prev => prev.map(sub => {
       if (sub.id !== subjectId) return sub;
 
+      // Unit-level comprehensive exam
+      if (targetType === 'unit') {
+        const updatedUnits = sub.units.map(unit => {
+          if (unit.id === targetId) {
+            return {
+              ...unit,
+              quiz: quizData
+            };
+          }
+          return unit;
+        });
+        return {
+          ...sub,
+          units: updatedUnits
+        };
+      }
+
+      // Lesson-level exam
       const updatedUnits = sub.units.map(unit => ({
         ...unit,
         lessons: unit.lessons.map(lesson => {
-          if (lesson.id === lessonId) {
+          if (lesson.id === targetId) {
             return {
               ...lesson,
               isStudied: true,
@@ -171,15 +235,33 @@ export default function App() {
     }));
   };
 
-  // Handler: Delete / Reset Quiz result
-  const handleDeleteQuiz = (subjectId, lessonId) => {
+  // Handler: Delete / Reset Quiz result (for Lesson or Unit)
+  const handleDeleteQuiz = (subjectId, targetId, targetType = 'lesson') => {
     setSubjects(prev => prev.map(sub => {
       if (sub.id !== subjectId) return sub;
 
+      // Unit-level comprehensive exam delete
+      if (targetType === 'unit') {
+        const updatedUnits = sub.units.map(unit => {
+          if (unit.id === targetId) {
+            return {
+              ...unit,
+              quiz: null
+            };
+          }
+          return unit;
+        });
+        return {
+          ...sub,
+          units: updatedUnits
+        };
+      }
+
+      // Lesson-level exam delete
       const updatedUnits = sub.units.map(unit => ({
         ...unit,
         lessons: unit.lessons.map(lesson => {
-          if (lesson.id === lessonId) {
+          if (lesson.id === targetId) {
             return {
               ...lesson,
               quiz: null,
@@ -314,6 +396,7 @@ export default function App() {
           <HomePortal
             subjects={subjects}
             schedule={schedule}
+            scheduledExams={scheduledExams}
             isAdmin={isAdmin}
             onNavigateToSubjects={() => setCurrentScreen('subjects_hub')}
             onNavigateToSchedule={() => setCurrentScreen('schedule')}
@@ -321,6 +404,9 @@ export default function App() {
               setActiveSubjectId(subjectId);
               setCurrentScreen('subject_detail');
             }}
+            onOpenScheduleExamModal={() => setIsScheduleExamModalOpen(true)}
+            onDeleteScheduledExam={handleDeleteScheduledExam}
+            onOpenTestModal={handleOpenTestModal}
           />
         )}
 
@@ -347,7 +433,7 @@ export default function App() {
             isAdmin={isAdmin}
             onSetCurrentLesson={handleSetCurrentLesson}
             onToggleStudiedLesson={handleToggleStudiedLesson}
-            onOpenTestModal={(subj, less) => setTestModal({ isOpen: true, subject: subj, lesson: less })}
+            onOpenTestModal={handleOpenTestModal}
             onOpenSyllabusEditor={(subj) => setSyllabusModal({ isOpen: true, subject: subj })}
             onDeleteQuiz={handleDeleteQuiz}
             onUpdateSubjectTeacher={handleUpdateSubjectTeacher}
@@ -370,14 +456,22 @@ export default function App() {
 
       </main>
 
-      {/* Test Recording Modal */}
+      {/* Test Recording Modal (Supports Lesson Quiz & Unit Comprehensive Exam) */}
       <TestModal
         isOpen={testModal.isOpen}
         subject={testModal.subject}
-        lesson={testModal.lesson}
-        onClose={() => setTestModal({ isOpen: false, subject: null, lesson: null })}
+        target={testModal.target}
+        onClose={() => setTestModal({ isOpen: false, subject: null, target: null })}
         onSaveQuiz={handleSaveQuiz}
         onDeleteQuiz={handleDeleteQuiz}
+      />
+
+      {/* Schedule Exam Modal */}
+      <ScheduleExamModal
+        isOpen={isScheduleExamModalOpen}
+        onClose={() => setIsScheduleExamModalOpen(false)}
+        subjects={subjects}
+        onSaveScheduledExam={handleSaveScheduledExam}
       />
 
       {/* Syllabus & Content Editor Modal */}

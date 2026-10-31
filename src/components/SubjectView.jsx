@@ -25,9 +25,11 @@ import {
   RotateCcw,
   Trash2,
   Edit3,
-  X
+  X,
+  Award
 } from 'lucide-react';
 import { getNextUpcomingClass } from '../utils/scheduleHelpers';
+import { calculateUnitMastery } from '../utils/masteryHelpers';
 
 const iconMap = {
   Calculator,
@@ -575,6 +577,7 @@ export default function SubjectView({
             <div className="p-5 sm:p-6 space-y-6">
               {activeSubject.units.map((unit, unitIdx) => {
                 const isCollapsed = collapsedUnits[unit.id];
+                const unitMetrics = calculateUnitMastery(unit);
 
                 // Arabic branch filter check
                 if (activeSubject.id === 'arabic' && selectedBranch !== 'all' && unit.branch && unit.branch !== selectedBranch) {
@@ -608,13 +611,13 @@ export default function SubjectView({
                     {/* Unit Header */}
                     <div 
                       onClick={() => toggleUnit(unit.id)}
-                      className="p-4 bg-slate-50 hover:bg-slate-100/80 cursor-pointer flex items-center justify-between border-b border-slate-200 transition-colors"
+                      className="p-4 bg-slate-50 hover:bg-slate-100/80 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-200 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="w-7 h-7 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">
+                        <span className="w-7 h-7 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shadow-sm shrink-0">
                           {unitIdx + 1}
                         </span>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <h3 className="font-extrabold text-slate-800 text-sm sm:text-base">
                             {unit.title}
                           </h3>
@@ -636,15 +639,68 @@ export default function SubjectView({
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-slate-500 font-semibold bg-white px-2.5 py-1 rounded-lg border border-slate-200">
-                          {unit.lessons.length} دروس
+                      {/* Unit Badges: Study Progress, Mastery Score, Comprehensive Unit Exam */}
+                      <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
+                        {/* Study Progress Badge */}
+                        <span className="text-[11px] font-black px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shadow-2xs">
+                          دراسة {unitMetrics.studiedLessons}/{unitMetrics.totalLessons} ({unitMetrics.studyPercentage}%)
                         </span>
-                        {isCollapsed ? (
-                          <ChevronDown className="w-5 h-5 text-slate-400" />
+
+                        {/* Mastery Score Badge */}
+                        {unitMetrics.masteryScore !== null ? (
+                          <span className={`text-[11px] font-black px-2.5 py-1 rounded-lg border shadow-2xs ${
+                            unitMetrics.status === 'mastered'
+                              ? 'bg-emerald-100 text-emerald-900 border-emerald-300'
+                              : unitMetrics.status === 'needs_review'
+                              ? 'bg-amber-100 text-amber-900 border-amber-300'
+                              : 'bg-blue-100 text-blue-900 border-blue-300'
+                          }`}>
+                            {unitMetrics.status === 'mastered' 
+                              ? `⭐ إتقان ${unitMetrics.masteryScore}%` 
+                              : unitMetrics.status === 'needs_review' 
+                              ? `⚠️ إتقان ${unitMetrics.masteryScore}%` 
+                              : `⏳ إتقان ${unitMetrics.masteryScore}% (مؤقت)`}
+                          </span>
                         ) : (
-                          <ChevronUp className="w-5 h-5 text-slate-400" />
+                          <span className="text-[11px] font-semibold text-slate-400 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
+                            لم يُختبر ⏳
+                          </span>
                         )}
+
+                        {/* Comprehensive Unit Exam Action Button */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onOpenTestModal(activeSubject, { 
+                              id: unit.id, 
+                              title: `الاختبار النهائي الشامل: ${unit.title}`, 
+                              quiz: unit.quiz, 
+                              type: 'unit' 
+                            });
+                          }}
+                          className={`px-3 py-1 rounded-xl text-xs font-black transition-all flex items-center gap-1.5 shadow-xs ${
+                            unit.quiz
+                              ? unit.quiz.percentage >= 95
+                                ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                                : 'bg-amber-500 hover:bg-amber-600 text-white'
+                              : 'bg-blue-600 hover:bg-blue-700 text-white'
+                          }`}
+                          title={unit.quiz ? 'عرض وتعديل نتيجة الاختبار الشامل للفصل' : 'تسجيل نتيجة الاختبار الشامل للفصل'}
+                        >
+                          <Award className="w-3.5 h-3.5 text-yellow-300" />
+                          <span>
+                            {unit.quiz ? `شامل: ${unit.quiz.percentage}%` : '🎯 اختبار الفصل'}
+                          </span>
+                        </button>
+
+                        <div className="text-slate-400 p-1">
+                          {isCollapsed ? (
+                            <ChevronDown className="w-5 h-5" />
+                          ) : (
+                            <ChevronUp className="w-5 h-5" />
+                          )}
+                        </div>
                       </div>
                     </div>
 
@@ -836,6 +892,88 @@ export default function SubjectView({
                             </div>
                           );
                         })}
+
+                        {/* Final Comprehensive Unit Exam Card inside the Unit */}
+                        <div className="mt-4 p-4 rounded-2xl border-2 border-dashed bg-gradient-to-l from-amber-50/70 via-white to-emerald-50/40 border-amber-300 shadow-xs">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div className="flex items-start sm:items-center gap-3">
+                              <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-500 text-white flex items-center justify-center shadow-md shadow-amber-500/20 shrink-0">
+                                <Award className="w-6 h-6 text-white" />
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-amber-200 text-amber-950">
+                                    الاختبار النهائي الشامل للفصل 🏆
+                                  </span>
+                                  <span className="text-[11px] text-slate-500 font-bold">
+                                    وزن التقييم: 50% من إتقان الفصل
+                                  </span>
+                                </div>
+                                <h4 className="text-sm font-black text-slate-900 mt-1">
+                                  {unit.title}
+                                </h4>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 self-start sm:self-auto">
+                              {unit.quiz ? (
+                                <div className="flex items-center gap-2">
+                                  <div className="text-right pl-3 border-l border-slate-200">
+                                    <div className="text-[10px] text-slate-400 font-bold">درجة الاختبار:</div>
+                                    <div className={`text-base font-black font-mono ${unit.quiz.percentage >= 95 ? 'text-emerald-600' : 'text-amber-600'}`}>
+                                      {unit.quiz.percentage}% {unit.quiz.percentage >= 95 ? '🌟' : '⚠️'}
+                                    </div>
+                                  </div>
+                                  <button
+                                    onClick={() => onOpenTestModal(activeSubject, { 
+                                      id: unit.id, 
+                                      title: `الاختبار النهائي الشامل: ${unit.title}`, 
+                                      quiz: unit.quiz, 
+                                      type: 'unit' 
+                                    })}
+                                    className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-colors"
+                                  >
+                                    <Edit3 className="w-3.5 h-3.5 text-blue-600" />
+                                    <span>تعديل النتيجة</span>
+                                  </button>
+                                </div>
+                              ) : (
+                                <button
+                                  onClick={() => onOpenTestModal(activeSubject, { 
+                                    id: unit.id, 
+                                    title: `الاختبار النهائي الشامل: ${unit.title}`, 
+                                    quiz: null, 
+                                    type: 'unit' 
+                                  })}
+                                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/20 transition-all"
+                                >
+                                  <Award className="w-4 h-4 text-yellow-300" />
+                                  <span>تسجيل نتيجة الاختبار الشامل للفصل 🎯</span>
+                                </button>
+                              )}
+                            </div>
+                          </div>
+
+                          {unit.quiz?.weaknesses && (
+                            <div className="mt-3 p-2.5 rounded-xl bg-amber-100/70 border border-amber-300 text-xs text-amber-950 flex items-start gap-2">
+                              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                              <div>
+                                <span className="font-black">ملاحظات ونقاط القصور بالفصل: </span>
+                                <span>{unit.quiz.weaknesses}</span>
+                              </div>
+                            </div>
+                          )}
+
+                          {unit.quiz?.geminiFeedback && (
+                            <div className="mt-2 p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-950 flex items-start gap-2">
+                              <Sparkles className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                              <div>
+                                <span className="font-black">توصية الذكاء الاصطناعي (Gemini): </span>
+                                <span>{unit.quiz.geminiFeedback}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
