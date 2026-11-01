@@ -14,22 +14,22 @@ import { onSnapshot } from 'firebase/firestore';
 import { TRACKER_DOC_REF, saveStateToCloud } from './services/firebase';
 
 export default function App() {
-  // Load from localStorage or defaults with automatic cache migration for v7 (All 3 Arabic Books Complete)
+  // Load from localStorage or defaults with automatic cache migration for v8 (Arabic 6 Branches Restructure)
   const [subjects, setSubjects] = useState(() => {
     try {
       const dataVersion = localStorage.getItem('study_tracker_data_version');
       const saved = localStorage.getItem('study_tracker_subjects');
       
-      // If version is v7_arabic_all_three_books_complete and has Arabic reading & poetry units, use it
-      if (saved && dataVersion === 'v7_arabic_all_three_books_complete') {
+      // If version is v8_arabic_6_branches and has Arabic new units, use it
+      if (saved && dataVersion === 'v8_arabic_6_branches') {
         const parsed = JSON.parse(saved);
         const arab = parsed.find(s => s.id === 'arabic');
-        if (arab && arab.units.some(u => u.id === 'unit-ar-reading')) {
+        if (arab && arab.units && arab.units.some(u => u.id === 'unit-ar-gram-basics')) {
           return parsed;
         }
       }
-      // Migrate and reset to clean initial subjects with all 3 Arabic books 100% complete
-      localStorage.setItem('study_tracker_data_version', 'v7_arabic_all_three_books_complete');
+      // Migrate and reset to clean initial subjects with all 6 Arabic branches
+      localStorage.setItem('study_tracker_data_version', 'v8_arabic_6_branches');
       localStorage.setItem('study_tracker_subjects', JSON.stringify(initialSubjects));
       return initialSubjects;
     } catch {
@@ -152,7 +152,7 @@ export default function App() {
             if (cloudData.subjects && Array.isArray(cloudData.subjects)) {
               setSubjects(prevLocal => {
                 // Check if cloud Arabic curriculum needs update to the new 6-branch structure
-                const defaultArabic = defaultSubjects.find(s => s.id === 'arabic');
+                const defaultArabic = initialSubjects.find(s => s.id === 'arabic');
                 const cloudArabic = cloudData.subjects.find(s => s.id === 'arabic');
                 const isCloudArabicOutdated = !cloudArabic || !cloudArabic.units || !cloudArabic.units.some(u => u.id === 'unit-ar-gram-basics');
 
